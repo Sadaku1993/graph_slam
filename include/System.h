@@ -5,12 +5,15 @@
 #include <thread>
 #include <iostream>
 #include <G2O.h>
+#include <Gicp.h>
 
 namespace GRAPH_SLAM
 {
 
 class G2O;
-// class Gicp;
+
+template<typename T_p> 
+class Gicp;
 
 class System
 {
@@ -22,7 +25,7 @@ public:
 private:
 
     G2O* mpG2O;
-    // Gicp* mpGicp;
+    Gicp<pcl::PointXYZINormal>* mpGicp;
 };
 
 }  // namespace GRAPH_SLAM

@@ -27,4 +27,5 @@ namespace GRAPH_SLAM
         transformation_matrix = gicp.getFinalTransformation();
     }
 
+
 } //GRAPH_SLAM

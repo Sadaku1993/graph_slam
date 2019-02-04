@@ -30,6 +30,4 @@ private:
 }; 
 
 } // namespace Gicp
-
-
 #endif // GICP
