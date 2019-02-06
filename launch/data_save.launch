@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!--velodyne-->
+    <include file="$(find velodyne_pointcloud)/launch/32e_points.launch" />
+
+    <!--gyro odometryを計算-->
+    <include file="$(find graph_slam)/launch/gyro_odometry.launch" />
+    
+    <!--データを保存-->
+    <node pkg="graph_slam" type="saver" name="saver" output="screen">
+        <remap from="/cloud" to="/velodyne_points"/>
+        <remap from="/odom" to="/tinypower/odom"/>
+        <param name="target_frame" type="string" value="/map" />
+        <param name="source_frame" type="string" value="/velodyne" />
+        <param name="threshold" type="double" value="2.0" />
+    </node>
+    
+    <!--rosbag-->
+    <arg name="bag" default="$(find graph_slam)/data/bagdata/data.bag" />
+    <node pkg="rosbag" type="play" name="play" args="$(arg bag)"/>
+    
+    <!--rviz-->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find graph_slam)/config/graph_slam.rviz"/>
+
+</launch>

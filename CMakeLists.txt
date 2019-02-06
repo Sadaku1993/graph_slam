@@ -92,59 +92,34 @@ add_library(${PROJECT_NAME} SHARED
     src/G2O.cpp
     src/System.cpp
     src/Gicp.cpp
+    src/Util.cpp
+    src/File.cpp
+    src/PCL.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_calibration_odom_laser.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_cli.so
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_core.so
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_csparse_extension.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_ext_csparse.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_ext_freeglut_minimal.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_hierarchical.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_incremental.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_interactive.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_interface.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_opengl_helper.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_parser.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_simulator.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_cholmod.so
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_csparse.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_dense.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_eigen.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_pcg.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_slam2d_linear.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_solver_structure_only.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_stuff.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_tutorial_slam2d.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_tutorial_slam3d.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_data.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_icp.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_sba.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_sclam2d.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_sim3.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_slam2d.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_slam2d_addons.so
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_slam3d.so
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_slam3d_addons.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_viewer.so
     ${PCL_LIBRARIES}
+    ${catkin_LIBRARIES}
 )
 
-add_executable(gyro_odometry src/gyro_odometry.cpp)
+add_executable(gyro_odometry Examples/ROS/gyro_odometry.cpp)
 target_link_libraries(gyro_odometry
     ${catkin_LIBRARIES}
 )
 
-add_executable(data_save src/data_save.cpp)
-target_link_libraries(data_save
+add_executable(saver Examples/ROS/saver.cpp)
+target_link_libraries(saver
     ${catkin_LIBRARIES}
     ${PCL_LIBRARIES}
 )
 
-add_executable(rm_cluster src/rm_cluster.cpp)
+add_executable(rm_cluster Examples/ROS/rm_cluster.cpp)
 target_link_libraries(rm_cluster
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
+    ${PROJECT_NAME}
 )
 
 add_executable(transformer src/transform.cpp)
@@ -159,8 +134,9 @@ target_link_libraries(gicp
     ${PCL_LIBRARIES}
 )
 
-add_executable(slam3d Examples/slam3d.cpp)
+add_executable(slam3d Examples/SLAM/slam3d.cpp)
 target_link_libraries(slam3d
-     ${PROJECT_NAME}
-     )
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}
+)
 

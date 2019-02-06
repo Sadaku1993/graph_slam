@@ -27,7 +27,9 @@ public:
 
 private:
 
-}; 
+};
+
+template class Gicp<pcl::PointXYZINormal>;
 
 } // namespace Gicp
 #endif // GICP

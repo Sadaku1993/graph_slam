@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!--remove cluster-->
+<launch>
+    <node pkg="mapping" type="rm_cluster" name="rm_cluster" output="screen">
+    </node>
+</launch>

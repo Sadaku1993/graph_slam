@@ -1,3 +1,4 @@
+
 /*
 
 remove clustered pointcloud
@@ -27,8 +28,13 @@ author:
 #include <graph_slam/normal_estimation.h>
 #include <graph_slam/cluster.h>
 
+#include <Util.h>
+
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
+
+
+class GRAPH_SLAM::Util; 
 
 template<typename T_p>
 class RmCluster{
@@ -47,6 +53,8 @@ class RmCluster{
         int min_size, max_size;
         // normal estimation parameter
         double search_radius;
+
+        GRAPH_SLAM::Util* mpUtil;
 
     public:
         RmCluster();
