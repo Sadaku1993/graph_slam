@@ -122,6 +122,19 @@ target_link_libraries(rm_cluster
     ${PROJECT_NAME}
 )
 
+add_executable(integrator Examples/ROS/integrator.cpp)
+target_link_libraries(integrator
+    ${PROJECT_NAME}
+)
+
+
+add_executable(node_edge Examples/SLAM/node_edge.cpp)
+target_link_libraries(node_edge
+    ${PROJECT_NAME}
+)
+
+
+
 add_executable(transformer src/transform.cpp)
 target_link_libraries(transformer
     ${catkin_LIBRARIES}

@@ -56,7 +56,7 @@ bool File::loadTF(std::vector<tf::Transform>& transforms,
     std::ifstream ifs(file_path);
 
     if(ifs.fail()){
-        std::cout<<" File is None "<<std::endl;
+        std::cout<<"File is None"<<std::endl;
         exit(0);
     }
 
@@ -77,6 +77,40 @@ bool File::loadTF(std::vector<tf::Transform>& transforms,
         tf.setOrigin(tf_vector);
         tf.setRotation(tf_quaternion);
         transforms.push_back(tf);
+    }
+}
+
+bool File::loadTF(std::vector< ID >& transforms,
+                  std::string file_path)
+{
+    std::ifstream ifs(file_path);
+
+    if(ifs.fail()){
+        std::cout<<" File is None "<<std::endl;
+        exit(0);
+    }
+
+    std::string line;
+    while(getline(ifs, line)){
+        std::vector<std::string> strvec = split(line, ' ');
+        if(strvec.at(0) != "VERTEX_SE3:QUAT")
+            continue;
+
+        tf::Transform tf;
+        tf::Vector3 tf_vector(std::stof(strvec.at(2)),
+                              std::stof(strvec.at(3)),
+                              std::stof(strvec.at(4)));
+        tf::Quaternion tf_quaternion(std::stof(strvec.at(5)),
+                                  std::stof(strvec.at(6)),
+                                  std::stof(strvec.at(7)),
+                                  std::stof(strvec.at(8)));
+        tf.setOrigin(tf_vector);
+        tf.setRotation(tf_quaternion);
+
+        ID id;
+        id.id = std::stoi(strvec.at(1));
+        id.transform = tf;
+        transforms.push_back(id);
     }
 }
 

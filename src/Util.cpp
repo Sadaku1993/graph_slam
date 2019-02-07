@@ -97,6 +97,29 @@ namespace GRAPH_SLAM
         return transform;
     }
 
+    // relative transform
+    void Util::relative(tf::Transform source_transform,
+                        tf::Transform target_transform,
+                        tf::Transform& transform)
+    {
+        tf::Vector3 source = source_transform.getOrigin();
+        tf::Vector3 target = target_transform.getOrigin();
+
+        double s_roll, s_pitch, s_yaw;
+        double t_roll, t_pitch, t_yaw;
+        tf::Matrix3x3(source_transform.getRotation()).getRPY(s_roll, s_pitch, s_yaw);
+        tf::Matrix3x3(target_transform.getRotation()).getRPY(t_roll, t_pitch, t_yaw);
+
+        tf::Vector3 vector(target.x() - source.x(), 
+                target.y() - source.y(), 
+                target.z() - source.z());
+        tf::Quaternion quaternion = tf::createQuaternionFromRPY(t_roll - s_roll,
+                t_pitch - s_pitch,
+                t_yaw - s_yaw);
+        transform.setOrigin(vector);
+        transform.setRotation(quaternion);
+    }
+
     template<typename T_p>
     void Util::transform_pointcloud(typename pcl::PointCloud<T_p>::Ptr& cloud,
                                     typename pcl::PointCloud<T_p>::Ptr& trans_cloud,
@@ -105,9 +128,8 @@ namespace GRAPH_SLAM
         pcl_ros::transformPointCloud(*cloud, *trans_cloud, tf);
     }
 
-    // print Transform
-    template<typename T>
-    void Util::printTF(T transform)
+    template<>
+    void Util::printTF<tf::Transform>(tf::Transform transform)
     {
         tf::Vector3 vector = transform.getOrigin();
         tf::Quaternion quaternion = transform.getRotation();
@@ -118,9 +140,10 @@ namespace GRAPH_SLAM
         printf("  t = < %6.3f %6.3f %6.3f >\n", vector.x(), vector.y(), vector.z());
         printf(" Quaternion : \n");
         printf("  q = < %6.3f %6.3f %6.3f %6.3f >\n", quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w());
-        // printf(" Euler : \n");
-        // printf("  e = < %6.3f %6.3f %6.3f >\n", roll, pitch, yaw);
+        printf(" Euler : \n");
+        printf("  e = < %6.3f %6.3f %6.3f >\n", roll, pitch, yaw);
     }
+
 
     template<>
     void Util::printTF<Eigen::Matrix4f>(Eigen::Matrix4f transform)

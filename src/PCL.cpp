@@ -228,4 +228,12 @@ void PCL<T_p>::NormalEstimation(typename pcl::PointCloud<T_p>::Ptr& cloud,
     }
 }
 
+template<typename T_p>
+void PCL<T_p>::TransformPointCloud(typename pcl::PointCloud<T_p>::Ptr& cloud,
+                                   typename pcl::PointCloud<T_p>::Ptr& trans_cloud,
+                                   tf::Transform tf)
+{
+    pcl_ros::transformPointCloud(*cloud, *trans_cloud, tf);
+}
+
 }

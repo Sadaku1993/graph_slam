@@ -9,6 +9,11 @@
 #include <fstream>
 #include <tf/tf.h>
 
+struct ID{
+    int id;
+    tf::Transform transform;
+};
+
 namespace GRAPH_SLAM
 {
 
@@ -26,6 +31,7 @@ class File{
         bool saveCloud(typename pcl::PointCloud<T_p>::Ptr&, std::string);
 
         bool loadTF(std::vector< tf::Transform >&, std::string);
+        bool loadTF(std::vector< ID >&, std::string);
 
     private:
 };

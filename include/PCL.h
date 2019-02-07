@@ -9,6 +9,8 @@
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/io/pcd_io.h>
+#include <tf/tf.h>
+#include <pcl_ros/transforms.h>
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
@@ -51,6 +53,10 @@ public:
     void NormalEstimation(typename pcl::PointCloud<T_p>::Ptr&,
                           typename pcl::PointCloud<pcl::PointXYZINormal>::Ptr&,
                           double search_radius);
+
+    void TransformPointCloud(typename pcl::PointCloud<T_p>::Ptr& cloud,
+                             typename pcl::PointCloud<T_p>::Ptr& trans_cloud,
+                             tf::Transform tf);
 
 private:
 
