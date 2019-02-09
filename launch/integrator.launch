@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <!--map integrator-->
+    <node pkg="graph_slam" type="integrator" name="integrator" output="screen">
+        <param name="tf_name" type="string" value="/data/csv/gicp.csv" />
+        <param name="map_name" type="string" value="/data/map/gicp.pcd" />
+    </node>
+</launch>

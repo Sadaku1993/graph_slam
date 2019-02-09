@@ -153,3 +153,14 @@ target_link_libraries(slam3d
     ${PROJECT_NAME}
 )
 
+
+add_executable(gicp_test Examples/Test/gicp_test.cpp)
+target_link_libraries(gicp_test
+    ${PCL_LIBRARIES}
+)
+
+add_executable(node_test Examples/Test/node_test.cpp)
+target_link_libraries(node_test
+    ${PCL_LIBRARIES}
+    ${PROJECT_NAME}
+)

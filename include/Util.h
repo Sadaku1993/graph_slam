@@ -27,10 +27,6 @@ class Util{
         Eigen::Matrix4f tf2eigen(tf::Transform transform);
         tf::Transform eigen2tf(Eigen::Matrix4f matrix);
 
-        void relative(tf::Transform source_transform,
-                      tf::Transform target_transform,
-                      tf::Transform& transform);
-
         template<typename T_p>
         void transform_pointcloud(typename pcl::PointCloud<T_p>::Ptr&,
                                   typename pcl::PointCloud<T_p>::Ptr&,

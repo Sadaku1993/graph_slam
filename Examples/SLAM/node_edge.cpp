@@ -1,5 +1,11 @@
 #include <ros/ros.h>
 #include <ros/package.h>
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
+#include <tf2_ros/static_transform_broadcaster.h>
+#include <geometry_msgs/PoseArray.h>
+#include <Eigen/Core>
+#include <Eigen/LU>
 
 #include <Gicp.h>
 #include <Util.h>
@@ -13,6 +19,9 @@ class NodeEdge{
         std::string package_path;
         std::string cloud_path;
         std::string tf_path;
+
+        ros::Publisher pub_odom;
+        ros::Publisher pub_gicp;
 
         int count;
 
@@ -37,6 +46,9 @@ NodeEdge<T_p>::NodeEdge()
     nh.param<std::string>("tf_path", tf_path, "/data/csv/");
     cloud_path.insert(0, package_path);
     tf_path.insert(0, package_path);
+
+    pub_odom = nh.advertise<geometry_msgs::PoseArray>("odometry", 1);
+    pub_gicp = nh.advertise<geometry_msgs::PoseArray>("gicp", 1);
     
     count = 0;
 }
@@ -55,7 +67,10 @@ void NodeEdge<T_p>::first()
     std::vector< ID > transforms;
     File.loadTF(transforms, odometry_name);
 
-    std::ofstream ofs(tf_name, std::ios::app);
+    geometry_msgs::PoseArray odom_array;
+    geometry_msgs::PoseArray gicp_array;
+
+    std::ofstream ofs(tf_name, std::ios::trunc);
     ofs << "VERTEX_SE3:QUAT" <<" "<< 0 <<" "
         << 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 1.0 << std::endl;
     ofs << "EDGE_SE3:QUAT" <<" "<< 0   <<" "<< 0   <<" "
@@ -87,27 +102,119 @@ void NodeEdge<T_p>::first()
         tf::Transform source_transform = itr->transform;
         tf::Transform target_transform = (itr+1)->transform;
 
+        // odometry
+        tf::Transform odom_transform = source_transform.inverseTimes(target_transform);
+        Eigen::Matrix4f odom_matrix = Util.tf2eigen(odom_transform);
+
         // transform PointCloud
-        typename pcl::PointCloud<T_p>::Ptr transform_source_cloud(new pcl::PointCloud<T_p>);
-        typename pcl::PointCloud<T_p>::Ptr transform_target_cloud(new pcl::PointCloud<T_p>);
-        PCL.TransformPointCloud(source_cloud, transform_source_cloud, source_transform);
-        PCL.TransformPointCloud(target_cloud, transform_target_cloud, target_transform);
+        typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
+        PCL.TransformPointCloud(source_cloud, trans_cloud, odom_transform);
 
         // Gicp
         Eigen::Matrix4f gicp_matrix;
         tf::Transform gicp_transform;
-        Gicp.gicp(transform_target_cloud, transform_source_cloud, gicp_matrix);
-        gicp_transform = Util.eigen2tf(gicp_matrix);
-        std::cout<<"GICP"<<std::endl;
-        Util.printTF(gicp_matrix);
+        Gicp.gicp(trans_cloud, target_cloud, gicp_matrix);
 
-        // Odometry
-        tf::Transform odom_transform;
-        Util.relative(source_transform, target_transform, odom_transform);
-        std::cout<<"Odometry"<<std::endl;
-        Util.printTF(odom_transform);
+        // ------------Check-----------
+        Eigen::Matrix4f final_matrix;
+        
+        Eigen::Matrix4f check_matrix;
+        check_matrix = gicp_matrix - Eigen::Matrix4f::Identity();
+        if(check_matrix.norm() < 0.5){
+            final_matrix = gicp_matrix*odom_matrix;
+        }
+        else{
+            final_matrix = odom_matrix;
+            std::cout<<"Matching Miss"<<std::endl;
+        }
 
+        tf::Transform final_transform = Util.eigen2tf(final_matrix);
+
+        // ------------Integration-------------
+        // Translation
+        Eigen::Translation<float, 3> translation;
+        translation = Eigen::Translation<float, 3>(final_matrix(0, 3), final_matrix(1, 3), final_matrix(2, 3));
+        // Rotation
+        Eigen::Matrix3f rotation;
+        rotation << final_matrix(0, 0), final_matrix(0, 1), final_matrix(0, 2),
+                    final_matrix(1, 0), final_matrix(1, 1), final_matrix(1, 2),
+                    final_matrix(2, 0), final_matrix(2, 1), final_matrix(2, 2);
+        Eigen::Quaternionf quaternion(rotation);
+        // Affine
+        Eigen::Affine3f affine;
+        affine = translation * quaternion;
+        // Integration
+        integration_matrix = affine * integration_matrix;
+        tf::Transform integration_transform = Util.eigen2tf(integration_matrix);
+
+        geometry_msgs::Pose odom_pose;
+        geometry_msgs::Pose gicp_pose;
+
+        odom_pose.position.x    = static_cast<float>(target_transform.getOrigin().x());
+        odom_pose.position.y    = static_cast<float>(target_transform.getOrigin().y());
+        odom_pose.position.z    = static_cast<float>(target_transform.getOrigin().z());
+        odom_pose.orientation.x = static_cast<float>(target_transform.getRotation().x());
+        odom_pose.orientation.y = static_cast<float>(target_transform.getRotation().y());
+        odom_pose.orientation.z = static_cast<float>(target_transform.getRotation().z());
+        odom_pose.orientation.w = static_cast<float>(target_transform.getRotation().w());
+        odom_array.poses.push_back(odom_pose);
+        odom_array.header.frame_id = "map";
+        odom_array.header.stamp = ros::Time::now();
+        pub_odom.publish(odom_array);
+
+        gicp_pose.position.x    = static_cast<float>(integration_transform.getOrigin().x());
+        gicp_pose.position.y    = static_cast<float>(integration_transform.getOrigin().y());
+        gicp_pose.position.z    = static_cast<float>(integration_transform.getOrigin().z());
+        gicp_pose.orientation.x = static_cast<float>(integration_transform.getRotation().x());
+        gicp_pose.orientation.y = static_cast<float>(integration_transform.getRotation().y());
+        gicp_pose.orientation.z = static_cast<float>(integration_transform.getRotation().z());
+        gicp_pose.orientation.w = static_cast<float>(integration_transform.getRotation().w());
+        gicp_array.poses.push_back(gicp_pose);
+        gicp_array.header.frame_id = "map";
+        gicp_array.header.stamp = ros::Time::now();
+        pub_gicp.publish(gicp_array);
+
+        // absulute
+        ofs << "VERTEX_SE3:QUAT" <<" "<< (itr+1)->id << " "
+            << integration_matrix(0, 3) <<" "
+            << integration_matrix(1, 3) <<" "
+            << integration_matrix(2, 3) <<" "
+            << quaternion.x() <<" "
+            << quaternion.y() <<" "
+            << quaternion.z() <<" "
+            << quaternion.w()
+            << std::endl;
+
+        // relative
+        ofs << "EDGE_SE3:QUAT" <<" "<< itr->id <<" "<< (itr+1)->id <<" "
+            << final_transform.getOrigin().x() <<" "
+            << final_transform.getOrigin().y() <<" " 
+            << final_transform.getOrigin().z() <<" "
+            << final_transform.getRotation().x() <<" "
+            << final_transform.getRotation().y() <<" "
+            << final_transform.getRotation().z() <<" "
+            << final_transform.getRotation().w() <<" "
+            << 1.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "
+            << 1.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "
+            << 1.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "
+            << 1.0 <<" "<< 0.0 <<" "<< 0.0 <<" "
+            << 1.0 <<" "<< 0.0 <<" "
+            << 1.0 << std::endl;
+        
         ofs.close();
+
+        // Show
+        std::cout<<"Final"<<std::endl;
+        Util.printTF(final_matrix);
+
+        std::cout<<"Odometry"<<std::endl;
+        Util.printTF(odom_matrix);
+
+        std::cout<<"Integration"<<std::endl;
+        Util.printTF(integration_matrix);
+
+
+        printf("\n");
     }
 }
 
