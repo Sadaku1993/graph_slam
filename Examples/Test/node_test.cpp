@@ -55,7 +55,7 @@ void NodeTest::main()
         tf::Transform transform = source_transform.inverseTimes(target_transform);
         Eigen::Affine3d affine;
         tf::TransformTFToEigen(transform, affine);
-
+        /*
         Eigen::Matrix4f relative_matrix = affine.cast<float> ();
         
         // translation
@@ -71,6 +71,9 @@ void NodeTest::main()
         matrix = translation*quaternion;
 
         integration_matrix = matrix * integration_matrix;
+        */
+
+        integration_matrix = affine * integration_matrix;
 
         Util.printTF(integration_matrix);
         Util.printTF(target_matrix);
