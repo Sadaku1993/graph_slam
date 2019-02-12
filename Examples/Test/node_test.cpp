@@ -68,8 +68,11 @@ void NodeTest::main()
         std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
 
         std::cout<<"  affine\n  "<<affine.matrix().cast<float>()<<std::endl;
-        std::cout<<"    translation\n    "<<translation.transpose()<<::std::endl;
-        std::cout<<"    rotation\n    "<<rotation<<std::endl;
+
+        integration_translation += translation;
+
+        std::cout<<"  integration"<<std::endl;
+        std::cout<<"  "<<integration_translation.transpose()<<std::endl; 
 
 
         // integration_translation = integration_translation + translation;
