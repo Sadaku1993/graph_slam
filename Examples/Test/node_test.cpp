@@ -61,9 +61,9 @@ void NodeTest::main()
         Eigen::Vector3d translation = affine.translation();
         Eigen::Matrix3d rotation = affine.rotation();
 
-        Util::printTF(transform);
+        Util.printTF(transform);
 
-        Util::printTF( affine.matrix().cast<float>() );
+        Util.printTF( affine.matrix().cast<float>() );
 
 
         // integration_translation = integration_translation + translation;
