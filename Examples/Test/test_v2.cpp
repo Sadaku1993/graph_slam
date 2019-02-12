@@ -66,7 +66,7 @@ void Test::main()
   tf::Transform transform;
   bool flag = transformListener(transform, "frame2", "frame1");
 
-  if(!flag) continue;
+  if(!flag) return;
 
   Eigen::Affine3d affine;
   tf::transformTFToEigen(transform, affine);
