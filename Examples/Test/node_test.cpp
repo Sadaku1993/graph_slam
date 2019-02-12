@@ -59,10 +59,10 @@ void NodeTest::main()
         Eigen::Matrix4d source_matrix = source_affine.matrix();
   
         tf::Transform transform = source_transform.inverseTimes(target_transform);
-        Util.printTF(transform);
+        // Util.printTF(transform);
 
         Eigen::Matrix4d test = source_matrix.inverse() * target_matrix;
-        Util.printTF(test.cast<float>());
+        // Util.printTF(test.cast<float>());
 
         Eigen::Affine3d affine;
         tf::transformTFToEigen(transform, affine);
