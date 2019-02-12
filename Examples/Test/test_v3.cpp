@@ -14,7 +14,7 @@ class Test{
   public:
     Test();
 
-    GRAPH_SLAM::Util Util;
+    GRAPH_SLAM::File File;
 
     void main();
     void printTF(tf::Transform);
