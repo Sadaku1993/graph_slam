@@ -33,7 +33,7 @@ void Test::transformListener(tf::Transform& transform,
 
   try{
     ros::Time now = ros::Time::now();
-    listener.waitforTransform(target_frame, source_frame, 
+    listener.waitForTransform(target_frame, source_frame, 
                               now, ros::Duration(1.0));
     listener.lookupTransform(target_frame, source_frame, 
                              now, stampedTransform);
@@ -82,9 +82,6 @@ int main(int argc, char** argv)
   while(ros::ok())
   {
     test.main();
-
-    rate.sleep(1);
-
     ros::spinOnce();
   }
 
