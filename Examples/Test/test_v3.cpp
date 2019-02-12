@@ -61,10 +61,10 @@ void Test::main()
 
     // translation
     Eigen::Vector3d source_translation = source_affine.translation();
-    Eigen::Matrix3d target_translation = target_affine.translation();
+    Eigen::Vector3d target_translation = target_affine.translation();
 
     // rotation
-    Eigen::Vector3d source_rotation = source_affine.rotation();
+    Eigen::Matrix3d source_rotation = source_affine.rotation();
     Eigen::Matrix3d target_rotation = target_affine.rotation();
 
     // relative
