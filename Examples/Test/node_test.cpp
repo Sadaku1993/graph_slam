@@ -60,6 +60,10 @@ void NodeTest::main()
   
         tf::Transform transform = source_transform.inverseTimes(target_transform);
         Util.printTF(transform);
+
+        Eigen::Matrix4d test = source_matrix.inverse() * target_matrix;
+        std::cout<<test<<std::endl;
+
         Eigen::Affine3d affine;
         tf::transformTFToEigen(transform, affine);
         Eigen::Matrix4d matrix = affine.matrix();
