@@ -127,8 +127,9 @@ void NodeEdge<T_p>::first()
 
         // transform pointcloud
         typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
-        Eigen::Matrix4f tmp = (relative.matrix()).cast <float> ();
-        pcl_ros::transformPointCloud(tmp, *source_cloud, *trans_cloud);
+        tf::Transform relative_transform;
+        tf::transformEigenToTF(relative.matrix(), relative_transform);
+        pcl_ros::transformPointCloud(*source_cloud, *trans_cloud, relative_transform);
 
         // Gicp
         Eigen::Matrix4d gicp_matrix;
