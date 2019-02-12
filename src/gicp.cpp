@@ -10,7 +10,7 @@ Gicp<T_p>::Gicp(){}
 template<typename T_p>
 void Gicp<T_p>::gicp(typename pcl::PointCloud<T_p>::Ptr& source_cloud, 
                      typename pcl::PointCloud<T_p>::Ptr& target_cloud, 
-                     Eigen::Matrix4f& transformation_matrix)
+                     Eigen::Matrix4d& transformation_matrix)
 {
     pcl::GeneralizedIterativeClosestPoint<T_p, T_p> gicp; 
     gicp.setMaxCorrespondenceDistance (0.10);
