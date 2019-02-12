@@ -23,7 +23,7 @@ void Gicp<T_p>::gicp(typename pcl::PointCloud<T_p>::Ptr& source_cloud,
     gicp.align(Final);
     std::cout<<"had converted:"<<gicp.hasConverged()<<" score: "<<gicp.getFitnessScore() << std::endl;
 
-    transformation_matrix = gicp.getFinalTransformation();
+    transformation_matrix = gicp.getFinalTransformation().cast<double>();
 }
 
 } //GRAPH_SLAM
