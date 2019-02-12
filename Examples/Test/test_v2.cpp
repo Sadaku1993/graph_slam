@@ -77,12 +77,13 @@ int main(int argc, char** argv)
 
   Test test;
 
-  ros::Rate rate(1);
+  ros::Rate rate(10);
 
   while(ros::ok())
   {
     test.main();
     ros::spinOnce();
+    rate.sleep();
   }
 
   return 0;
