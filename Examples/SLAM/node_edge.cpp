@@ -85,8 +85,6 @@ void NodeEdge<T_p>::first()
     ofs.close();
 
     // 積算
-    Eigen::Matrix4f integration_matrix = Eigen::Matrix4f::Identity();
-    
     Eigen::Vector3d vector = Eigen::Vector3d::Zero(3);
     Eigen::Matrix3d rotation = Eigen::Matrix3d::Identity();
 
@@ -141,7 +139,7 @@ void NodeEdge<T_p>::first()
         Eigen::Vector3d gicp_translation = gicp_affine.translation();
         Eigen::Matrix3d gicp_rotation = gicp_affine.rotation(); 
 
-        Eigen::Vector3d final_translation = gicp_translation * relative_translation;
+        Eigen::Vector3d final_translation = gicp_translation + relative_translation;
         Eigen::Matrix3d final_rotation = gicp_rotation * relative_rotation;
 
         // Integration
