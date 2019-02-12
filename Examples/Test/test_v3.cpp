@@ -25,7 +25,7 @@ Test::Test()
   : nh("~")
 {
   package_path = ros::package::getPath("graph_slam");
-  nh.param<std::string>("tf_path", tf_path, "/data/csv");
+  nh.param<std::string>("tf_path", tf_path, "/data/csv/");
   tf_path.insert(0, package_path);
 }
 
