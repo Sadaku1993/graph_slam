@@ -46,8 +46,8 @@ void Test::main()
   for (auto itr=transforms.begin(); itr!=transforms.end()-1; itr++)
   {
     std::cout<<"Node:"<<itr->id<<" "<<(itr+1)->id<<std::endl;
-    tf::Transform source_transform = itr->transform();
-    tf::Transform target_transform = (itr+1)->transform();
+    tf::Transform source_transform = itr->transform;
+    tf::Transform target_transform = (itr+1)->transform;
 
     Eigen::Affine3d source_affine;
     Eigen::Affine3d target_affine;
