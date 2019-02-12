@@ -79,6 +79,7 @@ find_package(catkin REQUIRED COMPONENTS
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ${Eigen_LIBRARIES}
 )
 
 catkin_package(
@@ -104,6 +105,7 @@ target_link_libraries(${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_types_slam3d_addons.so
     ${PCL_LIBRARIES}
     ${catkin_LIBRARIES}
+    ${Eigen_LIBRARIES}
 )
 
 add_executable(gyro_odometry Examples/ROS/gyro_odometry.cpp)
