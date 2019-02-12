@@ -51,9 +51,12 @@ void NodeTest::main()
         tf::Transform source_transform = itr->transform;
         tf::Transform target_transform = (itr+1)->transform;
 
+        Eigen::Affine3d source_affine;
         Eigen::Affine3d target_affine;
         tf::transformTFToEigen(target_transform, target_affine);
+        tf::transformTFToEigen(source_transform, source_affine);
         Eigen::Matrix4d target_matrix = target_affine.matrix();
+        Eigen::Matrix4d source_matrix = source_affine.matrix();
   
         tf::Transform transform = source_transform.inverseTimes(target_transform);
         Eigen::Affine3d affine;
@@ -61,9 +64,12 @@ void NodeTest::main()
         Eigen::Vector3d translation = affine.translation();
         Eigen::Matrix3d rotation = affine.rotation();
 
-        Util.printTF(transform);
+        std::cout<<"  source matrix\n  "<<source_matrix<<std::endl;
+        std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
 
-        Util.printTF( affine.matrix().cast<float>() );
+        std::cout<<"  affine\n  "<<affine.matrix().cast<float>()<<std::endl;
+        std::cout<<"    translation\n    "<<translation.T()<<std::endl;
+        std::cout<<"    rotation\n    "<<rotation<<std::endl;
 
 
         // integration_translation = integration_translation + translation;
@@ -94,7 +100,7 @@ void NodeTest::main()
         integration_matrix = matrix * integration_matrix;
         */
 
-        std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
+        // std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
  
         printf("\n");
     }
