@@ -10,7 +10,7 @@ Gicp<T_p>::Gicp(){}
 template<typename T_p>
 void Gicp<T_p>::gicp(typename pcl::PointCloud<T_p>::Ptr& source_cloud, 
                      typename pcl::PointCloud<T_p>::Ptr& target_cloud, 
-                     Eigen::Matrix4d& transformation_matrix)
+                     Eigen::Matrix4d& matrix)
 {
     pcl::GeneralizedIterativeClosestPoint<T_p, T_p> gicp; 
     gicp.setMaxCorrespondenceDistance (0.10);
@@ -23,7 +23,9 @@ void Gicp<T_p>::gicp(typename pcl::PointCloud<T_p>::Ptr& source_cloud,
     gicp.align(Final);
     std::cout<<"had converted:"<<gicp.hasConverged()<<" score: "<<gicp.getFitnessScore() << std::endl;
 
-    transformation_matrix = gicp.getFinalTransformation().cast<double>();
+    Eigen::Matrix4f gicp_matrix = gicp.getFinalTransformation();
+
+    matrix = gicp_matrix.cast <double> ();
 }
 
 } //GRAPH_SLAM
