@@ -166,3 +166,9 @@ target_link_libraries(node_test
     ${PCL_LIBRARIES}
     ${PROJECT_NAME}
 )
+
+add_executable(test_v2 Examples/Test/test_v2.cpp)
+target_link_libraries(test_v2
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
