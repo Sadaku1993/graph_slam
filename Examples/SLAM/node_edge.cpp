@@ -139,8 +139,23 @@ void NodeEdge<T_p>::first()
         Eigen::Vector3d gicp_translation = gicp_affine.translation();
         Eigen::Matrix3d gicp_rotation = gicp_affine.rotation(); 
 
-        Eigen::Vector3d final_translation = gicp_translation + relative_translation;
-        Eigen::Matrix3d final_rotation = gicp_rotation * relative_rotation;
+        // Eigen::Vector3d final_translation = gicp_translation + relative_translation;
+        // Eigen::Matrix3d final_rotation = gicp_rotation * relative_rotation;
+        
+        Eigen::Vector3d final_translation;
+        Eigen::Matrix3d final_rotation;
+
+        // Matching miss
+        Eigen::Matrix4d check = gicp_affine.matrix() - Eigen::Matrix4d::Identity();
+        if(check.norm() < 0.5){
+          final_translation = gicp_translation + relative_translation;
+          final_rotation = gicp_rotation * relative_rotation;
+        }
+        else{
+          std::cout<<"------------matching miss-------------"<<std::endl;
+          final_translation = relative_translation;
+          final_rotation = relative_rotation;
+        }
 
         // Integration
         vector = final_translation + vector;
