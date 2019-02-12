@@ -45,25 +45,20 @@ void NodeTest::main()
     std::vector< ID > transforms;
     File.loadTF(transforms, odometry_name);
 
-    Eigen::Matrix4f integration_matrix = Eigen::Matrix4f::Identity();
+    Eigen::Matrix4d integration_matrix = Eigen::Matrix4d::Identity();
 
     for(auto itr=transforms.begin(); itr!=transforms.end()-1; itr++)
     {
         tf::Transform source_transform = itr->transform;
         tf::Transform target_transform = (itr+1)->transform;
   
-        tf::TransformTFToEigen(source_transform, source_matrix);
-        tf::TransformTFToEigen(target_transform, target_matrix);
-
-        tf::Transform relative = source_transform.inverseTimes(target_transform);
+        tf::Transform transform = source_transform.inverseTimes(target_transform);
 
         Eigen::Affine3d affine;
-        tf::TransformTFToEigen(relative, affine);
+        tf::TransformTFToEigen(transform, affine);
 
-        std::cout<<"affine\n"<<affine<<std::endl;
-
-        Eigen::Eigen4f relative_matrix = affine.cast<float> ();
-
+        Eigen::Matrix4f relative_matrix = affine.cast<float> ();
+        
         // translation
         Eigen::Translation<float, 3> translation = Eigen::Translation<float, 3>(relative_matrix(0, 3), relative_matrix(1, 3), relative_matrix(2, 3));
         // rotation
