@@ -77,10 +77,9 @@ void NodeTest::main()
 
         integration_matrix = affine * integration_matrix;
 
-        
-        Util.printTF(integration_matrix);
-        Util.printTF(target_matrix);
-
+        std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
+        std::cout<<"  integration matrix\n  "<<integration_matrix<<std::endl;
+ 
         printf("\n");
     }
     
