@@ -64,8 +64,11 @@ void NodeTest::main()
         Eigen::Vector3d translation = affine.translation();
         Eigen::Matrix3d rotation = affine.rotation(); 
 
+        std::cout<<"    translation\n    "<<translation<<std::endl;
+        std::cout<<"    rotation   \n    "<<rotation<<std::endl;
+
         integration_translation = integration_translation + translation;
-        integration_rotation = integration_rotation * rotation;
+        integration_rotation = rotation * integration_rotation;
 
         Eigen::Translation<double, 3> trans(integration_translation);
 
@@ -91,8 +94,6 @@ void NodeTest::main()
 
         integration_matrix = matrix * integration_matrix;
         */
-
-        integration_matrix = affine * integration_matrix;
 
         std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
         std::cout<<"  integration matrix\n  "<<integration_matrix<<std::endl;
