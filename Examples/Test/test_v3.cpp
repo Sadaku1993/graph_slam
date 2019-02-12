@@ -66,10 +66,10 @@ void Test::main()
     std::cout<<target_affine.matrix()<<std::endl;
 
     std::cout<<"relative"<<std::endl;
-    std::cout<<relative<<std::endl;
+    std::cout<<relative.matrix()<<std::endl;
 
     std::cout<<"reconstruct"<<std::endl;
-    std::cout<<reconstruct<<std::endl;
+    std::cout<<reconstruct.matrix()<<std::endl;
 
   }
 
