@@ -147,7 +147,7 @@ void NodeEdge<T_p>::first()
         rotation = final_rotation * rotation;
 
         Eigen::Translation<double, 3> translation(vector);
-        Eigen::Affine3d affine = transform * rotation;
+        Eigen::Affine3d affine = translation * rotation;
 
         tf::Transform integration_transform;
         tf::transformEigenToTF(affine, integration_transform);
