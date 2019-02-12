@@ -87,6 +87,11 @@ void Test::main()
   std::cout<<"target affine"<<std::endl;
   std::cout<<target_affine.matrix()<<std::endl;
 
+
+  Eigen::Affine3d relative = source_affine.inverse() * target_affine;
+  std::cout<<"relative"<<std::endl;
+  std::cout<<relative.matrix()<<std::endl;
+
   // Eigen::Vector3d translation = affine.translation();
   // Eigen::Matrix3d rotation = affine.rotation();
 }
