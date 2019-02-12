@@ -13,7 +13,7 @@ void Gicp<T_p>::gicp(typename pcl::PointCloud<T_p>::Ptr& source_cloud,
                      Eigen::Matrix4d& matrix)
 {
     pcl::GeneralizedIterativeClosestPoint<T_p, T_p> gicp; 
-    gicp.setMaxCorrespondenceDistance (0.10);
+    gicp.setMaxCorrespondenceDistance (0.50);
     gicp.setMaximumIterations (100);        
     gicp.setTransformationEpsilon (1e-8);   
     gicp.setEuclideanFitnessEpsilon (1e-8);
