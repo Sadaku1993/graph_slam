@@ -14,6 +14,8 @@ class Test{
     tf::Transform target_frame;
     tf::Transform source_frame;
 
+    tf::TransformListener listener;
+
   public:
     Test();
 
@@ -30,12 +32,12 @@ bool Test::transformListener(tf::Transform& transform,
                     std::string target_frame,
                     std::string source_frame)
 {
-  tf::TransformListener listener;
   tf::StampedTransform stampedTransform;
 
   try{
-    listener.lookupTransform(target_frame, source_frame, 
-                             ros::Time(0), stampedTransform);
+    ros::Time now = ros::Time::now();
+    listener.waitForTransform(target_frame, source_frame, now, ros::Duration(1.0));
+    listener.lookupTransform(target_frame, source_frame,  now, transform);
   }
   catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
