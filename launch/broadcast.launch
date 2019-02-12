@@ -6,4 +6,10 @@
 <node pkg="tf" type="static_transform_publisher" name="map2frame2"
   args="4.03981 0.0592503 0 0 0 0.0347768 0.999395 /map /frame2 100"/>
 
+<node pkg="tf" type="static_transform_publisher" name="map2frame86"
+  args="-1.89916 -57.0827 0 0 0 0.954166 0.299277 /map /frame86 100"/>
+
+<node pkg="tf" type="static_transform_publisher" name="map2frame87"
+  args="-3.05147 -55.4851 0 0 0 0.797926 0.602755 /map /frame87 100"/>
+
 </launch>

@@ -64,14 +64,15 @@ void Test::broadcast(tf::Transform transform,
 
 void Test::main()
 {
+  std::cout<<"-----------------------"<<std::endl;
   tf::Transform transform;
-  if(!transformListener(transform, "frame1", "frame2")) return;
+  if(!transformListener(transform, "frame86", "frame87")) return;
 
   tf::Transform source_transform;
-  if(!transformListener(source_transform, "map", "frame1")) return;
+  if(!transformListener(source_transform, "map", "frame86")) return;
 
   tf::Transform target_transform;
-  if(!transformListener(target_transform, "map", "frame2")) return;
+  if(!transformListener(target_transform, "map", "frame87")) return;
 
   Eigen::Affine3d affine, source_affine, target_affine;
   tf::transformTFToEigen(transform, affine);
@@ -86,7 +87,6 @@ void Test::main()
 
   std::cout<<"target affine"<<std::endl;
   std::cout<<target_affine.matrix()<<std::endl;
-
 
   Eigen::Affine3d relative = source_affine.inverse() * target_affine;
   std::cout<<"relative"<<std::endl;
