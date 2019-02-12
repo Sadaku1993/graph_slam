@@ -45,6 +45,9 @@ void NodeTest::main()
 
     Eigen::Matrix4d integration_matrix = Eigen::Matrix4d::Identity();
 
+    Eigen::Vector3d integration_translation = Eigen::Vector3d::Zero(3);
+    Eigen::Matrix3d integration_rotation = Eigen::Matrix3d::Identity();
+
     for(auto itr=transforms.begin(); itr!=transforms.end()-1; itr++)
     {
         tf::Transform source_transform = itr->transform;
@@ -57,6 +60,18 @@ void NodeTest::main()
         tf::Transform transform = source_transform.inverseTimes(target_transform);
         Eigen::Affine3d affine;
         tf::transformTFToEigen(transform, affine);
+
+        Eigen::Vector3d translation = affine.translation();
+        Eigen::Matrix3d rotation = affine.rotation(); 
+
+        integration_translation = integration_translation + translation;
+        integration_rotation = integration_rotation * rotation;
+
+        Eigen::Affine3d integration_affine = integration_translation * integration_rotation;
+
+        integration_matrix = integration_affine.matrix();
+
+
         /*
         Eigen::Matrix4f relative_matrix = affine.cast<float> ();
         
