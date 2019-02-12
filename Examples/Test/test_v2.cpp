@@ -36,8 +36,8 @@ bool Test::transformListener(tf::Transform& transform,
 
   try{
     ros::Time now = ros::Time::now();
-    listener.waitForTransform(target_frame, source_frame, now, ros::Duration(1.0));
-    listener.lookupTransform(target_frame, source_frame,  now, stampedTransform);
+    listener.waitForTransform(source_frame, target_frame, now, ros::Duration(1.0));
+    listener.lookupTransform(source_frame, target_frame,  now, stampedTransform);
     transform.setOrigin(stampedTransform.getOrigin());
     transform.setRotation(stampedTransform.getRotation());
     return true;
@@ -65,7 +65,7 @@ void Test::broadcast(tf::Transform transform,
 void Test::main()
 {
   tf::Transform transform;
-  bool flag = transformListener(transform, "frame2", "frame1");
+  bool flag = transformListener(transform, "frame1", "frame2");
 
   if(!flag) return;
 
