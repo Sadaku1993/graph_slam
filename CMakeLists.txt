@@ -172,3 +172,9 @@ target_link_libraries(test_v2
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
 )
+
+add_executable(test_v3 Examples/Test/test_v3.cpp)
+target_link_libraries(test_v3
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
