@@ -65,14 +65,30 @@ void Test::broadcast(tf::Transform transform,
 void Test::main()
 {
   tf::Transform transform;
-  bool flag = transformListener(transform, "frame1", "frame2");
+  if(!transformListener(transform, "frame1", "frame2")) return;
 
-  if(!flag) return;
+  tf::Transform source_transform;
+  if(!transformListener(source_transform, "map", "frame1")) return;
 
-  Eigen::Affine3d affine;
+  tf::Transform target_transform;
+  if(!transformListener(target_transform, "map", "frame2")) return;
+
+  Eigen::Affine3d affine, source_affine, target_affine;
   tf::transformTFToEigen(transform, affine);
-
+  tf::transformTFToEigen(source_transform, source_affine);
+  tf::transformTFToEigen(target_transform, target_affine);
+  
+  std::cout<<"affine:"<<std::endl;
   std::cout<<affine.matrix()<<std::endl;
+
+  std::cout<<"source affine"<<std::endl;
+  std::cout<<source_affine.matrix()<<std::endl;
+
+  std::cout<<"target affine"<<std::endl;
+  std::cout<<target_affine.matrix()<<std::endl;
+
+  // Eigen::Vector3d translation = affine.translation();
+  // Eigen::Matrix3d rotation = affine.rotation();
 }
 
 int main(int argc, char** argv)
