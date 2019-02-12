@@ -23,7 +23,7 @@ public:
     
     void gicp(typename pcl::PointCloud<T_p>::Ptr& source_cloud, 
               typename pcl::PointCloud<T_p>::Ptr& target_cloud, 
-              Eigen::Matrix4f& transformation_matrix);
+              Eigen::Matrix4d& transformation_matrix);
 
 private:
 

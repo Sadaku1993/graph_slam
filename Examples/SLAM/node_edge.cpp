@@ -85,6 +85,9 @@ void NodeEdge<T_p>::first()
 
     // 積算
     Eigen::Matrix4f integration_matrix = Eigen::Matrix4f::Identity();
+    
+    Eigen::Vector3d vector = Eigen::Vector3d::Zero(3);
+    Eigen::Matrix3d rotation = Eigen::Matrix3d::Identity();
 
     for(auto itr=transforms.begin(); itr!=transforms.end()-1; itr++)
     {
@@ -101,6 +104,31 @@ void NodeEdge<T_p>::first()
         // load TF
         tf::Transform source_transform = itr->transform;
         tf::Transform target_transform = (itr+1)->transform;
+
+        // Affine
+        Eigen::Affine3d source_affine;
+        Eigen::Affine3d target_affine;
+        tf::transformTFToEigen(source_transform, source_affine);
+        tf::transformTFToEigen(target_transform, target_affine);
+
+        // Translation
+        Eigen::Vector3d source_translation = source_affine.translation();
+        Eigen::Vector3d target_translation = target_affine.translation();
+        
+        // rotation
+        Eigen::Matrix3d source_rotation = source_affine.rotation();
+        Eigen::Matrix3d target_rotation = target_affine.rotation();
+
+        // relative
+        Eigen::Affine3d relative = source_affine.inverse() * target_affine;
+        Eigen::Vector3d relative_translation = target_translation - source_translation;
+        Eigen::Matrix3d relative_rotation = source_rotation.inverse() * target_rotation;
+
+        // transform pointcloud
+        typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
+        pcl_ros::transformPointCloud(*source_cloud, *trans_cloud, relative.matrix());
+
+        //-----------------------------------------------------------------------------
 
         // odometry
         tf::Transform odom_transform = source_transform.inverseTimes(target_transform);

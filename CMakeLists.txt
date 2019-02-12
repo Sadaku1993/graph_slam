@@ -143,18 +143,11 @@ target_link_libraries(transformer
     ${PCL_LIBRARIES}
 )
 
-add_executable(gicp src/gicp.cpp)
-target_link_libraries(gicp
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
-)
-
 add_executable(slam3d Examples/SLAM/slam3d.cpp)
 target_link_libraries(slam3d
     ${catkin_LIBRARIES}
     ${PROJECT_NAME}
 )
-
 
 add_executable(gicp_test Examples/Test/gicp_test.cpp)
 target_link_libraries(gicp_test

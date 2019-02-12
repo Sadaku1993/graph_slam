@@ -89,9 +89,6 @@ void Test::main()
 
     std::cout<<"affine"<<std::endl;
     std::cout<<affine.matrix()<<std::endl;
-
-    // std::cout<<"reconstruct"<<std::endl;
-    // std::cout<<reconstruct.matrix()<<std::endl;
   }
 }
 
