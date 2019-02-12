@@ -92,6 +92,10 @@ void Test::main()
   std::cout<<"relative"<<std::endl;
   std::cout<<relative.matrix()<<std::endl;
 
+  Eigen::Affine3d reconstruct = source_affine * relative;
+  std::cout<<"reconstruct"<<std::endl;
+  std::cout<<reconstruct.matrix()<<std::endl;
+
   // Eigen::Vector3d translation = affine.translation();
   // Eigen::Matrix3d rotation = affine.rotation();
 }
