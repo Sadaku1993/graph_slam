@@ -3,9 +3,7 @@
 #include <tf/tf.h>
 #include <tf_conversions/tf_eigen.h>
 #include <File.h>
-
 #include <Util.h>
-
 
 class NodeTest{
     
@@ -51,6 +49,10 @@ void NodeTest::main()
     {
         tf::Transform source_transform = itr->transform;
         tf::Transform target_transform = (itr+1)->transform;
+
+        Eigen::Affine3d target_affine;
+        tf::TransformTFToEigen(target_transform, target_affine);
+        Eigen::Matrix3d target_matrix = target_affine.matrix();
   
         tf::Transform transform = source_transform.inverseTimes(target_transform);
         Eigen::Affine3d affine;
@@ -75,6 +77,7 @@ void NodeTest::main()
 
         integration_matrix = affine * integration_matrix;
 
+        
         Util.printTF(integration_matrix);
         Util.printTF(target_matrix);
 
