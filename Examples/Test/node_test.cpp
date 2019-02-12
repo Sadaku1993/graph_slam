@@ -62,7 +62,7 @@ void NodeTest::main()
         Util.printTF(transform);
 
         Eigen::Matrix4d test = source_matrix.inverse() * target_matrix;
-        std::cout<<test<<std::endl;
+        Util.printTF(test.cast<float>());
 
         Eigen::Affine3d affine;
         tf::transformTFToEigen(transform, affine);
