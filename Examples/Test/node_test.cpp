@@ -95,7 +95,6 @@ void NodeTest::main()
         */
 
         std::cout<<"  target matrix\n  "<<target_matrix<<std::endl;
-        std::cout<<"  integration matrix\n  "<<integration_matrix<<std::endl;
  
         printf("\n");
     }
