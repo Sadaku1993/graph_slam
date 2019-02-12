@@ -134,7 +134,8 @@ void NodeEdge<T_p>::first()
         Gicp.gicp(source_cloud, trans_cloud, gicp_matrix);
         
         // affine
-        Eigen::Affine3d gicp_affine = gicp_matrix;
+        Eigen::Affine3d gicp_affine;
+        gicp_affine = gicp_matrix;
         Eigen::Vector3d gicp_translation = gicp_affine.translation();
         Eigen::Matrix3d gicp_rotation = gicp_affine.rotation(); 
 
