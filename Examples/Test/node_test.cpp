@@ -51,12 +51,12 @@ void NodeTest::main()
         tf::Transform target_transform = (itr+1)->transform;
 
         Eigen::Affine3d target_affine;
-        tf::TransformTFToEigen(target_transform, target_affine);
+        // tf::TransformTFToEigen(target_transform, target_affine);
         Eigen::Matrix3d target_matrix = target_affine.matrix();
   
         tf::Transform transform = source_transform.inverseTimes(target_transform);
         Eigen::Affine3d affine;
-        tf::TransformTFToEigen(transform, affine);
+        // tf::TransformTFToEigen(transform, affine);
         /*
         Eigen::Matrix4f relative_matrix = affine.cast<float> ();
         
