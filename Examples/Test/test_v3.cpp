@@ -39,7 +39,8 @@ void Test::main()
   std::cout<<"main"<<std::endl;
 
   // init
-  Eigen::Matrix4d matrix = Eigen::Matrix4d::Identity();
+  Eigen::Vector3d translation = Eigen::Vector3d::Zero(3);
+  Eigen::Matrix3d rotation = Eigen::Matrix3d::Identity();
 
   // loadTF
   std::string odometry_name = tf_path + "odometry.csv";
@@ -52,17 +53,32 @@ void Test::main()
     tf::Transform source_transform = itr->transform;
     tf::Transform target_transform = (itr+1)->transform;
 
+    // affine
     Eigen::Affine3d source_affine;
     Eigen::Affine3d target_affine;
-
     tf::transformTFToEigen(source_transform, source_affine);
     tf::transformTFToEigen(target_transform, target_affine);
 
-    Eigen::Affine3d relative = source_affine.inverse() * target_affine;
-    
-    Eigen::Affine3d reconstruct = source_affine * relative;
+    // translation
+    Eigen::Vector3d source_translation = source_affine.translation();
+    Eigen::Matrix3d target_translation = target_affine.translation();
 
-    matrix = relative * matrix;
+    // rotation
+    Eigen::Vector3d source_rotation = source_affine.rotation();
+    Eigen::Matrix3d target_rotation = target_affine.rotation();
+
+    // relative
+    Eigen::Vector3d relative_translation = target_translation - source_translation;
+    Eigen::Matrix3d relative_rotation = source_rotation.inverse() * target_rotation;
+    // Eigen::Affine3d relative = source_affine.inverse() * target_affine;
+
+    // integrate
+    translation = relative_translation + translation;
+    rotation = relative_rotation * rotation;
+    Eigen::Affine3d affine;
+    affine = translation * rotation;
+  
+    // Eigen::Affine3d reconstruct = source_affine * relative;
 
     std::cout<<"source affine"<<std::endl;
     std::cout<<source_affine.matrix()<<std::endl;
@@ -70,14 +86,11 @@ void Test::main()
     std::cout<<"target affine"<<std::endl;
     std::cout<<target_affine.matrix()<<std::endl;
 
-    std::cout<<"relative"<<std::endl;
-    std::cout<<relative.matrix()<<std::endl;
+    std::cout<<"affine"<<std::endl;
+    std::cout<<affine.matrix()<<std::endl;
 
-    std::cout<<"reconstruct"<<std::endl;
-    std::cout<<reconstruct.matrix()<<std::endl;
-
-    std::cout<<"matrix"<<std::endl;
-    std::cout<<matrix.matrix()<<std::endl;
+    // std::cout<<"reconstruct"<<std::endl;
+    // std::cout<<reconstruct.matrix()<<std::endl;
   }
 }
 
