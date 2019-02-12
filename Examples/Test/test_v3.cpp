@@ -39,7 +39,7 @@ void Test::main()
   std::cout<<"main"<<std::endl;
 
   // init
-  Eigen::Vector3d translation = Eigen::Vector3d::Zero(3);
+  Eigen::Vector3d vector = Eigen::Vector3d::Zero(3);
   Eigen::Matrix3d rotation = Eigen::Matrix3d::Identity();
 
   // loadTF
@@ -73,10 +73,11 @@ void Test::main()
     // Eigen::Affine3d relative = source_affine.inverse() * target_affine;
 
     // integrate
-    translation = relative_translation + translation;
+    vector = relative_translation + vector;
     rotation = relative_rotation * rotation;
-    Eigen::Affine3d affine;
-    affine = translation * rotation;
+  
+    Eigen::Translation<double, 3> translation(vector);
+    Eigen::Affine3d affine = trans * rotation;;
   
     // Eigen::Affine3d reconstruct = source_affine * relative;
 
