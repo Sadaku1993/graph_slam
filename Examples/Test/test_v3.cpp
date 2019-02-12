@@ -38,6 +38,9 @@ void Test::main()
 {
   std::cout<<"main"<<std::endl;
 
+  // init
+  Eigen::Affine3d matrix = Eigen::Matrix4d::Identity();
+
   // loadTF
   std::string odometry_name = tf_path + "odometry.csv";
   std::vector< ID > transforms;
@@ -59,6 +62,8 @@ void Test::main()
     
     Eigen::Affine3d reconstruct = source_affine * relative;
 
+    matrix = relative * matrix;
+
     std::cout<<"source affine"<<std::endl;
     std::cout<<source_affine.matrix()<<std::endl;
 
@@ -71,8 +76,9 @@ void Test::main()
     std::cout<<"reconstruct"<<std::endl;
     std::cout<<reconstruct.matrix()<<std::endl;
 
+    std::cout<<"matrix"<<std::endl;
+    std::cout<<matrix.matrix()<<std::endl;
   }
-
 }
 
 
