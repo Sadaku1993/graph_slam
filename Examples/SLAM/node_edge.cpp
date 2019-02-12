@@ -147,7 +147,7 @@ void NodeEdge<T_p>::first()
 
         // Matching miss
         Eigen::Matrix4d check = gicp_affine.matrix() - Eigen::Matrix4d::Identity();
-        if(check.norm() < 1.5){
+        if(check.norm() < 2.0){
           final_translation = gicp_translation + relative_translation;
           final_rotation = gicp_rotation * relative_rotation;
         }
