@@ -37,17 +37,16 @@ bool Test::transformListener(tf::Transform& transform,
   try{
     ros::Time now = ros::Time::now();
     listener.waitForTransform(target_frame, source_frame, now, ros::Duration(1.0));
-    listener.lookupTransform(target_frame, source_frame,  now, transform);
+    listener.lookupTransform(target_frame, source_frame,  now, stampedTransform);
+    transform.setOrigin(stampedTransform.getOrigin());
+    transform.setRotation(stampedTransform.getRotation());
+    return true;
   }
   catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
       ros::Duration(1.0).sleep();
       return false;
   }
-
-  transform.setOrigin(stampedTransform.getOrigin());
-  transform.setRotation(stampedTransform.getRotation());
-  return true;
 }
 
 void Test::broadcast(tf::Transform transform,
