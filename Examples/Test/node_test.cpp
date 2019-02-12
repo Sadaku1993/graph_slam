@@ -53,7 +53,6 @@ void NodeTest::main()
         tf::Transform target_transform = (itr+1)->transform;
   
         tf::Transform transform = source_transform.inverseTimes(target_transform);
-
         Eigen::Affine3d affine;
         tf::TransformTFToEigen(transform, affine);
 
