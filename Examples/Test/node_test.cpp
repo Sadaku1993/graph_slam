@@ -51,14 +51,18 @@ void NodeTest::main()
     {
         tf::Transform source_transform = itr->transform;
         tf::Transform target_transform = (itr+1)->transform;
+  
+        tf::TransformTFToEigen(source_transform, source_matrix);
+        tf::TransformTFToEigen(target_transform, target_matrix);
 
-        Eigen::Matrix4f source_matrix = Util.tf2eigen(source_transform);
-        Eigen::Matrix4f target_matrix = Util.tf2eigen(target_transform);
+        tf::Transform relative = source_transform.inverseTimes(target_transform);
 
-        tf::Transform relative_transform = source_transform.inverseTimes(target_transform);
-        Eigen::Matrix4f relative_matrix = Util.tf2eigen(relative_transform);
+        Eigen::Affine3d affine;
+        tf::TransformTFToEigen(relative, affine);
 
-        std::cout<<"relative matrix\n"<<relative_matrix<<std::endl;
+        std::cout<<"affine\n"<<affine<<std::endl;
+
+        Eigen::Eigen4f relative_matrix = affine.cast<float> ();
 
         // translation
         Eigen::Translation<float, 3> translation = Eigen::Translation<float, 3>(relative_matrix(0, 3), relative_matrix(1, 3), relative_matrix(2, 3));
