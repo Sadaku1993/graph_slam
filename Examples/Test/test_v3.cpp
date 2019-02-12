@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "text_v3");
 
-  Test test();
+  Test test;
 
   test.main();
 
