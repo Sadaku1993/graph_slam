@@ -2,6 +2,7 @@
 #include <ros/package.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
+#include <tf_conversions/tf_eigen.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <geometry_msgs/PoseArray.h>
 #include <Eigen/Core>
@@ -131,56 +132,24 @@ void NodeEdge<T_p>::first()
         // Gicp
         Eigen::Matrix4d gicp_matrix;
         Gicp.gicp(source_cloud, trans_cloud, gicp_matrix);
-
-
-        //-----------------------------------------------------------------------------
-
-        /*
-        // odometry
-        tf::Transform odom_transform = source_transform.inverseTimes(target_transform);
-        Eigen::Matrix4f odom_matrix = Util.tf2eigen(odom_transform);
-
-        // transform PointCloud
-        typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
-        PCL.TransformPointCloud(source_cloud, trans_cloud, odom_transform);
-
-        // Gicp
-        Eigen::Matrix4f gicp_matrix;
-        tf::Transform gicp_transform;
-        Gicp.gicp(trans_cloud, target_cloud, gicp_matrix);
-        */
-
-        // ------------Check-----------
-        Eigen::Matrix4f final_matrix;
         
-        Eigen::Matrix4f check_matrix;
-        check_matrix = gicp_matrix - Eigen::Matrix4f::Identity();
-        if(check_matrix.norm() < 0.5){
-            final_matrix = gicp_matrix*odom_matrix;
-        }
-        else{
-            final_matrix = odom_matrix;
-            std::cout<<"Matching Miss"<<std::endl;
-        }
+        // affine
+        Eigen::Affine3d gicp_affine = gicp_matrix;
+        Eigen::Vector3d gicp_translation = gicp_affine.translation();
+        Eigen::Matrix3d gicp_rotation = gicp_affine.rotation(); 
 
-        tf::Transform final_transform = Util.eigen2tf(final_matrix);
+        Eigen::Vector3d final_translation = gicp_transform * relative_translation;
+        Eigen::Matrix3d final_rotation = gicp_rotation * relative_rotation;
 
-        // ------------Integration-------------
-        // Translation
-        Eigen::Translation<float, 3> translation;
-        translation = Eigen::Translation<float, 3>(final_matrix(0, 3), final_matrix(1, 3), final_matrix(2, 3));
-        // Rotation
-        Eigen::Matrix3f rotation;
-        rotation << final_matrix(0, 0), final_matrix(0, 1), final_matrix(0, 2),
-                    final_matrix(1, 0), final_matrix(1, 1), final_matrix(1, 2),
-                    final_matrix(2, 0), final_matrix(2, 1), final_matrix(2, 2);
-        Eigen::Quaternionf quaternion(rotation);
-        // Affine
-        Eigen::Affine3f affine;
-        affine = translation * quaternion;
         // Integration
-        integration_matrix = affine * integration_matrix;
-        tf::Transform integration_transform = Util.eigen2tf(integration_matrix);
+        vector = final_transform + vector;
+        rotation = final_rotation * rotation;
+
+        tf::Translation<double, 3> translation(vector);
+        Eigen::Affine3d affine = transform * rotation;
+
+        tf::Transform integration_transform;
+        tf::transformEigenToTF(affine, integration_transform);
 
         geometry_msgs::Pose odom_pose;
         geometry_msgs::Pose gicp_pose;
@@ -209,6 +178,7 @@ void NodeEdge<T_p>::first()
         gicp_array.header.stamp = ros::Time::now();
         pub_gicp.publish(gicp_array);
 
+        /*
         // absulute
         ofs << "VERTEX_SE3:QUAT" <<" "<< (itr+1)->id << " "
             << integration_matrix(0, 3) <<" "
@@ -247,7 +217,7 @@ void NodeEdge<T_p>::first()
 
         std::cout<<"Integration"<<std::endl;
         Util.printTF(integration_matrix);
-
+        */
 
         printf("\n");
     }
