@@ -128,8 +128,14 @@ void NodeEdge<T_p>::first()
         typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
         pcl_ros::transformPointCloud(*source_cloud, *trans_cloud, relative.matrix());
 
+        // Gicp
+        Eigen::Matrix4d gicp_matrix;
+        Gicp.gicp(source_cloud, trans_cloud, gicp_matrix);
+
+
         //-----------------------------------------------------------------------------
 
+        /*
         // odometry
         tf::Transform odom_transform = source_transform.inverseTimes(target_transform);
         Eigen::Matrix4f odom_matrix = Util.tf2eigen(odom_transform);
@@ -142,6 +148,7 @@ void NodeEdge<T_p>::first()
         Eigen::Matrix4f gicp_matrix;
         tf::Transform gicp_transform;
         Gicp.gicp(trans_cloud, target_cloud, gicp_matrix);
+        */
 
         // ------------Check-----------
         Eigen::Matrix4f final_matrix;
