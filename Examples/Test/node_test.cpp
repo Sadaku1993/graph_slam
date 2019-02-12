@@ -67,7 +67,9 @@ void NodeTest::main()
         integration_translation = integration_translation + translation;
         integration_rotation = integration_rotation * rotation;
 
-        Eigen::Affine3d integration_affine = integration_translation * integration_rotation;
+        Eigen::Translation<double, 3> trans(integration_translation);
+
+        Eigen::Affine3d integration_affine = trans * integration_rotation;
 
         integration_matrix = integration_affine.matrix();
 
