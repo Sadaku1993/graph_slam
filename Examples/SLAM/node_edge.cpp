@@ -138,14 +138,14 @@ void NodeEdge<T_p>::first()
         Eigen::Vector3d gicp_translation = gicp_affine.translation();
         Eigen::Matrix3d gicp_rotation = gicp_affine.rotation(); 
 
-        Eigen::Vector3d final_translation = gicp_transform * relative_translation;
+        Eigen::Vector3d final_translation = gicp_translation * relative_translation;
         Eigen::Matrix3d final_rotation = gicp_rotation * relative_rotation;
 
         // Integration
-        vector = final_transform + vector;
+        vector = final_translation + vector;
         rotation = final_rotation * rotation;
 
-        tf::Translation<double, 3> translation(vector);
+        Eigen::Translation<double, 3> translation(vector);
         Eigen::Affine3d affine = transform * rotation;
 
         tf::Transform integration_transform;
