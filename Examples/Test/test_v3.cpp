@@ -39,7 +39,7 @@ void Test::main()
   std::cout<<"main"<<std::endl;
 
   // init
-  Eigen::Affine3d matrix = Eigen::Matrix4d::Identity();
+  Eigen::Matrix4d matrix = Eigen::Matrix4d::Identity();
 
   // loadTF
   std::string odometry_name = tf_path + "odometry.csv";
