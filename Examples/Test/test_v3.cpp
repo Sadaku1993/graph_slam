@@ -77,7 +77,7 @@ void Test::main()
     rotation = relative_rotation * rotation;
   
     Eigen::Translation<double, 3> translation(vector);
-    Eigen::Affine3d affine = trans * rotation;;
+    Eigen::Affine3d affine = translation * rotation;;
   
     // Eigen::Affine3d reconstruct = source_affine * relative;
 
