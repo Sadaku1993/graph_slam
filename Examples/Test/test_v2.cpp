@@ -32,11 +32,8 @@ void Test::transformListener(tf::Transform& transform,
   tf::StampedTransform stampedTransform;
 
   try{
-    ros::Time time = ros::Time(0);
-    listener.waitForTransform(target_frame, source_frame, 
-                              time, ros::Duration(1.0));
     listener.lookupTransform(target_frame, source_frame, 
-                             time, stampedTransform);
+                             ros::Time(0), stampedTransform);
   }
   catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
