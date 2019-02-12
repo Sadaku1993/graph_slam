@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
 <node pkg="tf" type="static_transform_publisher" name="map2frame1"
-  args="1.99659 -0.0281242 0 0 0 -0.010194 0.999948 map frame1 1000"/>
+  args="1.99659 -0.0281242 0 0 0 -0.010194 0.999948 map frame1"/>
 
 <node pkg="tf" type="static_transform_publisher" name="map2frame2"
-  args="4.03981 0.0592503 0 0 0 0.0347768 0.999395 map frame2 1000"/>
+  args="4.03981 0.0592503 0 0 0 0.0347768 0.999395 map frame2"/>
 
 </launch>

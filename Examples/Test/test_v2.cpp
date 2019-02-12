@@ -2,6 +2,8 @@
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
+#include <tf/tf.h>
+#include <tf_conversions/tf_eigen.h>
 #include <geometry_msgs/Transform.h>
 #include <geometry_msgs/TransformStamped.h>
 
@@ -15,7 +17,7 @@ class Test{
   public:
     Test();
 
-    void transformListener(tf::Transform&, std::string, std::string);
+    bool transformListener(tf::Transform&, std::string, std::string);
     void broadcast(tf::Transform, std::string, std::string);
     void main();
 };
@@ -24,7 +26,7 @@ Test::Test()
   : nh("~")
 {}
 
-void Test::transformListener(tf::Transform& transform,
+bool Test::transformListener(tf::Transform& transform,
                     std::string target_frame,
                     std::string source_frame)
 {
@@ -38,10 +40,12 @@ void Test::transformListener(tf::Transform& transform,
   catch (tf::TransformException ex){
       ROS_ERROR("%s",ex.what());
       ros::Duration(1.0).sleep();
+      return false;
   }
 
   transform.setOrigin(stampedTransform.getOrigin());
   transform.setRotation(stampedTransform.getRotation());
+  return true;
 }
 
 void Test::broadcast(tf::Transform transform,
@@ -60,12 +64,14 @@ void Test::broadcast(tf::Transform transform,
 void Test::main()
 {
   tf::Transform transform;
-  transformListener(transform, "frame2", "frame1");
+  bool flag = transformListener(transform, "frame2", "frame1");
 
-  geometry_msgs::Transform msg;
-  tf::transformTFToMsg(transform, msg);
+  if(!flag) continue;
 
-  std::cout<<msg<<std::endl;
+  Eigen::Affine3d affine;
+  tf::transformTFToEigen(transform, affine);
+
+  std::cout<<affine.matrix()<<std::endl;
 }
 
 int main(int argc, char** argv)
