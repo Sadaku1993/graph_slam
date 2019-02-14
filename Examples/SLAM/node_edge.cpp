@@ -8,7 +8,11 @@
 #include <Eigen/Core>
 #include <Eigen/LU>
 
+#include <pcl_ros/point_cloud.h>
+#include <pcl_ros/transforms.h>
+
 #include <Gicp.h>
+#include <ICP.h>
 #include <Util.h>
 #include <File.h>
 #include <PCL.h>
@@ -24,12 +28,18 @@ class NodeEdge{
         ros::Publisher pub_odom;
         ros::Publisher pub_gicp;
 
+        ros::Publisher pub_source_cloud;
+        ros::Publisher pub_target_cloud;
+        ros::Publisher pub_relative_cloud;
+
         int count;
 
     public:
         NodeEdge();
         
         GRAPH_SLAM::Gicp<T_p> Gicp;
+        GRAPH_SLAM::ICP<pcl::PointXYZ> ICP;
+
         GRAPH_SLAM::Util Util;
         GRAPH_SLAM::File File;
         GRAPH_SLAM::PCL<T_p> PCL;
@@ -50,7 +60,10 @@ NodeEdge<T_p>::NodeEdge()
 
     pub_odom = nh.advertise<geometry_msgs::PoseArray>("odometry", 1);
     pub_gicp = nh.advertise<geometry_msgs::PoseArray>("gicp", 1);
-    
+
+    pub_source_cloud = nh.advertise<sensor_msgs::PointCloud2>("source_cloud", 1);
+    pub_target_cloud = nh.advertise<sensor_msgs::PointCloud2>("target_cloud", 1);
+    pub_relative_cloud = nh.advertise<sensor_msgs::PointCloud2>("relative_cloud", 1);
     count = 0;
 }
 
@@ -119,29 +132,35 @@ void NodeEdge<T_p>::first()
         Eigen::Matrix3d target_rotation = target_affine.rotation();
 
         // relative
-        Eigen::Affine3d relative = source_affine.inverse() * target_affine;
+        Eigen::Affine3d relative = target_affine.inverse() * source_affine;
         Eigen::Vector3d relative_translation = target_translation - source_translation;
         Eigen::Matrix3d relative_rotation = source_rotation.inverse() * target_rotation;
 
-        // transform pointcloud
-        typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
+        std::cout<<"relative\n"<<relative.matrix()<<std::endl;
+        std::cout<<"translation\n"<<relative_translation<<std::endl;
+        std::cout<<"rotation\n"<<relative_rotation<<std::endl;
+        
         tf::Transform relative_transform;
         tf::transformEigenToTF(relative, relative_transform);
+        typename pcl::PointCloud<T_p>::Ptr trans_cloud(new pcl::PointCloud<T_p>);
         pcl_ros::transformPointCloud(*source_cloud, *trans_cloud, relative_transform);
+
+        // transform pointcloud
+        typename pcl::PointCloud<T_p>::Ptr trans_source_cloud(new pcl::PointCloud<T_p>);
+        typename pcl::PointCloud<T_p>::Ptr trans_target_cloud(new pcl::PointCloud<T_p>);
+        pcl_ros::transformPointCloud(*source_cloud, *trans_source_cloud, source_transform);
+        pcl_ros::transformPointCloud(*target_cloud, *trans_target_cloud, target_transform);
 
         // Gicp
         Eigen::Matrix4d gicp_matrix;
-        Gicp.gicp(source_cloud, trans_cloud, gicp_matrix);
-        
+        Gicp.gicp(trans_cloud, target_cloud, gicp_matrix);
+
         // affine
         Eigen::Affine3d gicp_affine;
         gicp_affine = gicp_matrix;
         Eigen::Vector3d gicp_translation = gicp_affine.translation();
         Eigen::Matrix3d gicp_rotation = gicp_affine.rotation(); 
 
-        // Eigen::Vector3d final_translation = gicp_translation + relative_translation;
-        // Eigen::Matrix3d final_rotation = gicp_rotation * relative_rotation;
-        
         Eigen::Vector3d final_translation;
         Eigen::Matrix3d final_rotation;
 
@@ -193,6 +212,23 @@ void NodeEdge<T_p>::first()
         gicp_array.header.frame_id = "map";
         gicp_array.header.stamp = ros::Time::now();
         pub_gicp.publish(gicp_array);
+
+        sensor_msgs::PointCloud2 pc_source;
+        sensor_msgs::PointCloud2 pc_target;
+        sensor_msgs::PointCloud2 pc_relative;
+
+        pcl::toROSMsg(*source_cloud, pc_source);
+        pcl::toROSMsg(*target_cloud, pc_target);
+        pcl::toROSMsg(*trans_cloud, pc_relative);
+        pc_source.header.frame_id = "map";
+        pc_source.header.stamp = ros::Time::now();
+        pc_target.header.frame_id = "map";
+        pc_target.header.stamp = ros::Time::now();
+        pc_relative.header.frame_id = "map";
+        pc_relative.header.stamp = ros::Time::now();
+        pub_source_cloud.publish(pc_source);
+        pub_target_cloud.publish(pc_target);
+        pub_relative_cloud.publish(pc_relative);
 
         /*
         // absulute

@@ -88,12 +88,12 @@ void RmCluster<T_p>::main()
         *merge_cloud += *remove_cloud;
 
         // normal estimation
-        typename pcl::PointCloud<pcl::PointXYZINormal>::Ptr normal_cloud(new pcl::PointCloud<pcl::PointXYZINormal>);
-        PCL.NormalEstimation(merge_cloud, normal_cloud, search_radius);
+        // typename pcl::PointCloud<pcl::PointXYZINormal>::Ptr normal_cloud(new pcl::PointCloud<pcl::PointXYZINormal>);
+        // PCL.NormalEstimation(merge_cloud, normal_cloud, search_radius);
 
         // savePointCloud
         std::string save_name = save_path + std::to_string(i) + ".pcd";
-        File.saveCloud<pcl::PointXYZINormal>(normal_cloud, save_name);
+        File.saveCloud<pcl::PointXYZINormal>(merge_cloud, save_name);
     }
 }
 
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "Rm_Cluster");
 
-    RmCluster<pcl::PointXYZI> rc;
+    RmCluster<pcl::PointXYZINormal> rc;
 
     rc.main();
 

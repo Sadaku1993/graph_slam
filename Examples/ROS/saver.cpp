@@ -4,7 +4,7 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "Saver");
 
-    Saver<pcl::PointXYZI> sv;
+    Saver<pcl::PointXYZINormal> sv;
 
     ros::spin();
 

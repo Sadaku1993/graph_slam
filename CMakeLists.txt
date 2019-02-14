@@ -96,6 +96,7 @@ add_library(${PROJECT_NAME} SHARED
     src/Util.cpp
     src/File.cpp
     src/PCL.cpp
+    src/ICP.cpp
 )
 target_link_libraries(${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_core.so
