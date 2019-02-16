@@ -37,10 +37,10 @@ class NodeEdge{
         GRAPH_SLAM::File File;
 
         void main();
-        void pub_pose(tf::transform, 
+        void pub_pose(tf::Transform, 
                       geometry_msgs::PoseArray&,
                       ros::Publisher);
-        void tf_broadcast(tf::transform,
+        void tf_broadcast(tf::Transform,
                           std::string
                           std::string);
 };
