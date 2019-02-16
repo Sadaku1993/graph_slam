@@ -4,6 +4,7 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <geometry_msgs/PoseArray.h>
 
+#include <tf/tf.h>
 #include <tf_conversions/tf_eigen.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 
@@ -84,9 +85,9 @@ void NodeEdge<T_p>::pub_pose(tf::Transform transform,
 
 
 template<typename T_p>
-void NodeEdge::tf_broadcast(tf::Transform tf,
-                            std::string header_frame
-                            std::string child_frame)
+void NodeEdge<T_p>::tf_broadcast(tf::Transform tf,
+                                 std::string header_frame
+                                 std::string child_frame)
 {
   static tf2_ros::TransformBroadcaster br;
   geometry_msgs::TransformStamped transformStamped;
