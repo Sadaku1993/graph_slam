@@ -146,7 +146,7 @@ void NodeEdge<T_p>::main()
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "NodeEdge2");
+  ros::init(argc, argv, "NodeEdge3");
 
   NodeEdge<pcl::PointXYZINormal> ne;
 

@@ -172,7 +172,7 @@ target_link_libraries(test_v3
   ${PROJECT_NAME}
 )
 
-add_executable(node_edge_v3 Examples/Test/node_edge_v3.cpp)
+add_executable(node_edge_v3 Examples/SLAM/node_edge_v3.cpp)
 target_link_libraries(node_edge_v3
   ${PROJECT_NAME}
 )
