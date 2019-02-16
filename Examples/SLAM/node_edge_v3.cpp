@@ -164,6 +164,9 @@ void NodeEdge<T_p>::main()
   geometry_msgs::PoseArray odom_array;
   geometry_msgs::PoseArray gicp_array;
 
+  Eigen::Affine3d absolute_affine;
+  absolute_affine = Eigen::Matrix4d::Identity();
+
   std::ofstream ofs(tf_name, std::ios::trunc);
   ofs << "VERTEX_SE3:QUAT" <<" "<< 0 <<" "
       << 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 1.0 << std::endl;
@@ -195,36 +198,6 @@ void NodeEdge<T_p>::main()
     tf::Transform gicp_transform;
     tf::transformEigenToTF(gicp_affine, gicp_transform);
 
-    // -----------------broadcast------------------------
-    // tf_broadcast(source_transform, "map", "source_frame");
-    // tf_broadcast(target_transform, "map", "target_frame");
-    
-    /*tf_broadcast(gicp_transform.inverse(), "target_frame", "gicp");
-
-    // -----------------listener------------------------
-    tf::StampedTransform stamped_transform;
-    tf::Transform transform;
-
-    // print
-    Eigen::Affine3d edge_affine;
-    tf::transformTFToEigen(edge_transform, edge_affine);
-    std::cout<<"Edge(true)\n"<<edge_affine.matrix()<<std::endl;
-
-    Eigen::Matrix4d check = gicp_matrix - Eigen::Matrix4d::Identity();
-    if(check.norm() < 1.0){
-        tf_listener("source_frame", "gicp", stamped_transform);
-        transform.setOrigin(stamped_transform.getOrigin());
-        transform.setRotation(stamped_transform.getRotation());
-    }
-    else{
-        std::cout<<"Matching Miss"<<std::endl;
-        transform = edge_transform;
-    }
-
-    tf::transformTFToEigen(transform, edge_affine);
-    std::cout<<"Edge(estimate)\n"<<edge_affine.matrix()<<std::endl;
-    */
-
     Eigen::Affine3d edge_affine;
     tf::transformTFToEigen(edge_transform, edge_affine);
     
@@ -240,7 +213,31 @@ void NodeEdge<T_p>::main()
         affine = edge_affine;
     }
     tf::transformEigenToTF(affine, transform);
+    
+    absolute_affine = absolute_affine * affine;
+    tf::Transform absolute_transform;
+    tf::transformEigenToTF(absolute_affine, absolute_transform);
 
+    pub_pose(target_transform, odom_array, pub_odom);
+    pub_pose(absolute_transform, gicp_array, pub_gicp);
+    
+    typename pcl::PointCloud<T_p>::Ptr absolute_cloud(new pcl::PointCloud<T_p>);
+    pcl_ros::transformPointCloud(*target_cloud, *absolute_cloud, absolute_transform);
+    pubCloud(absolute_cloud, pub_cloud);
+
+    std::ofstream ofs(tf_name, std::ios::app);
+    ofs << "VERTEX_SE3:QUAT" <<" "<< (itr+1)->id << " "
+        << absolute_transform.getOrigin().x()<<" "
+        << absolute_transform.getOrigin().y()<<" "
+        << absolute_transform.getOrigin().z()<<" "
+        << absolute_transform.getRotation().x()<<" "
+        << absolute_transform.getRotation().y()<<" "
+        << absolute_transform.getRotation().z()<<" "
+        << absolute_transform.getRotation().w()
+        << std::endl;
+    ofs.close();
+
+    /*
     std::string source_name = std::to_string(itr->id);
     std::string target_name = std::to_string((itr+1)->id);
 
@@ -261,37 +258,8 @@ void NodeEdge<T_p>::main()
     typename pcl::PointCloud<T_p>::Ptr absolute_cloud(new pcl::PointCloud<T_p>);
     pcl_ros::transformPointCloud(*target_cloud, *absolute_cloud, absolute_transform);
     pubCloud(absolute_cloud, pub_cloud);
-
-    /*
-    std::string source_name = std::to_string(itr->id);
-    std::string target_name = std::to_string((itr+1)->id);
-
-    if(itr->id == 0) tf_broadcast(transform, "map", target_name);
-    else tf_broadcast(transform, source_name, target_name);
-    
-    tf::StampedTransform stamped_absolute_transform;
-    tf_listener("map", target_name, stamped_absolute_transform);
-    
-    std::ofstream ofs(tf_name, std::ios::app);
-    ofs << "VERTEX_SE3:QUAT" <<" "<< (itr+1)->id << " "
-        << stamped_absolute_transform.getOrigin().x()<<" "
-        << stamped_absolute_transform.getOrigin().y()<<" "
-        << stamped_absolute_transform.getOrigin().z()<<" "
-        << stamped_absolute_transform.getRotation().x()<<" "
-        << stamped_absolute_transform.getRotation().y()<<" "
-        << stamped_absolute_transform.getRotation().z()<<" "
-        << stamped_absolute_transform.getRotation().w()
-        << std::endl;
-    ofs.close();
-
-    tf::Transform absolute_transform;
-    absolute_transform.setOrigin(stamped_absolute_transform.getOrigin());
-    absolute_transform.setRotation(stamped_absolute_transform.getRotation());
-    typename pcl::PointCloud<T_p>::Ptr absolute_cloud(new pcl::PointCloud<T_p>);
-    pcl_ros::transformPointCloud(*target_cloud, *absolute_cloud, absolute_transform);
-    pubCloud(absolute_cloud, pub_cloud);
     */
-
+    
   }
 }
 
