@@ -86,7 +86,7 @@ void NodeEdge<T_p>::pub_pose(tf::Transform transform,
 
 template<typename T_p>
 void NodeEdge<T_p>::tf_broadcast(tf::Transform tf,
-                                 std::string header_frame
+                                 std::string header_frame,
                                  std::string child_frame)
 {
   static tf2_ros::TransformBroadcaster br;
@@ -112,7 +112,7 @@ void NodeEdge<T_p>::main()
 {
   std::cout<<"NodeEdge"<<std::endl;
 
-  std::strinng tf_name = tf_path + "gicp.csv";
+  std::string tf_name = tf_path + "gicp.csv";
 
   std::string odometry_name = tf_path + "odometry.csv";
   std::vector< ID > transforms;
