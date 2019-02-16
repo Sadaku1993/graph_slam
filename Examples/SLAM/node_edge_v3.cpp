@@ -41,7 +41,7 @@ class NodeEdge{
                       geometry_msgs::PoseArray&,
                       ros::Publisher);
         void tf_broadcast(tf::Transform,
-                          std::string
+                          std::string,
                           std::string);
 };
 
@@ -62,7 +62,7 @@ NodeEdge<T_p>::NodeEdge()
 }
 
 template<typename T_p>
-void NodeEdge<T_p>::pub_pose(tf::Transform transorm,
+void NodeEdge<T_p>::pub_pose(tf::Transform transform,
                              geometry_msgs::PoseArray& pose_array,
                              ros::Publisher pub)
 {
