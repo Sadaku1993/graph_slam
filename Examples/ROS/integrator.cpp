@@ -31,8 +31,8 @@ Integrator<T_p>::Integrator()
     // path
     package_path = ros::package::getPath("graph_slam");
     nh.param<std::string>("cloud_path", cloud_path, "/data/remove/");
-    nh.param<std::string>("tf_name", tf_name, "/data/csv/odometry.csv");
-    nh.param<std::string>("map_name", map_name, "/data/map/odometry.pcd");
+    nh.param<std::string>("tf_name", tf_name, "/data/csv/gicp.csv");
+    nh.param<std::string>("map_name", map_name, "/data/map/gicp.pcd");
     cloud_path.insert(0, package_path);
     tf_name.insert(0, package_path);
     map_name.insert(0, package_path);

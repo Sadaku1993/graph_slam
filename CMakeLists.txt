@@ -74,6 +74,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   tf_conversions
+  tf2_ros
 )
 
 include_directories(

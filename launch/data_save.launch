@@ -8,12 +8,12 @@
     <include file="$(find graph_slam)/launch/gyro_odometry.launch" />
 
     <!--Normal Estimation-->
-    <!--include file="$(find perfect_velodyne)/launch/normal_estimation_hdl32.launch" /-->
     <node pkg="perfect_velodyne" type="perfect_velodyne_node" name="perfect_velodyne_node"/>
     
     <!--データを保存-->
     <node pkg="graph_slam" type="saver" name="saver" output="screen">
         <remap from="/cloud" to="/perfect_velodyne/normal"/>
+        <!--remap from="/cloud" to="/velodyne_points"/-->
         <remap from="/odom" to="/tinypower/odom"/>
         <param name="target_frame" type="string" value="/map" />
         <param name="source_frame" type="string" value="/base_link" />
