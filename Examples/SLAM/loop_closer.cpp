@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-
+#include <ros/package.h>
 #include <visualization_msgs/Marker.h>
 #include <geometry_msgs/PoseArray.h>
 
@@ -22,7 +22,7 @@ class LoopCloser{
 
 template<typename T_p>
 LoopCloser<T_p>::LoopCloser()
-  nh("~")
+  :nh("~")
 {
     package_path = ros::package::getPath("graph_slam");
     nh.param<std::string>("tf_path", tf_path, "/data/csv/");
@@ -54,30 +54,44 @@ void LoopCloser<T_p>::main()
   bool init[int(transforms.size())] = {false};
 
   for(size_t i=0;i<transforms.size(); i++){
-    double min_distane = INFINITY;
+    double min_distance = INFINITY;
     NodeEdge node_edge;
+    bool flag = false;
     for(size_t j=0;j<transforms.size(); j++){
-      tf::Transform source_transform = transforms[i]->transform;
-      tf::Transform target_transform = transforms[j]->transform;
+
+      if(init[i] && init[j]) break;
+
+      tf::Transform source_transform = transforms[i].transform;
+      tf::Transform target_transform = transforms[j].transform;
       tf::Transform edge_transform = source_transform.inverseTimes(target_transform);
 
-      double distance = sqrt( pow(edge_transform.getOrigin(),x, 2) + 
-          pow(edge_transform.getOrigin().y, 2) + 
-          pow(edge_transform.getOrigin().z, 2) );
+      double distance = sqrt( pow(edge_transform.getOrigin().x(), 2) + 
+                              pow(edge_transform.getOrigin().y(), 2) + 
+                              pow(edge_transform.getOrigin().z(), 2) );
 
       // Node間が近いものは考慮しない
-      if(min_distance<distance && abs(i-j) < THRESHPLD) continue;
+      if(min_distance<distance && abs(int(i-j)) < THRESHPLD) continue;
 
       min_distance = distance;
       node_edge.source_id = i;
       node_edge.target_id = j;
       node_edge.source_transform = source_transform;
       node_edge.target_transform = target_transform;
+      flag = true;
+    }
+
+    if(flag){
+      init[node_edge.source_id] = true;
+      init[node_edge.target_id] = true;
+      loop_data.push_back(node_edge);
     }
   }
 
 
-
+  for(auto itr=loop_data.begin(); itr!=loop_data.end(); itr++)
+  {
+    std::cout<<itr->source_id<<" "<<itr->target_id<<std::endl;
+  }
 }
 
 int main(int argc, char** argv)

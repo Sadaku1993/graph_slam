@@ -137,7 +137,15 @@ target_link_libraries(node_edge
     ${PROJECT_NAME}
 )
 
+add_executable(node_edge_v3 Examples/SLAM/node_edge_v3.cpp)
+target_link_libraries(node_edge_v3
+  ${PROJECT_NAME}
+)
 
+add_executable(loop_closer Examples/SLAM/loop_closer.cpp)
+target_link_libraries(loop_closer
+  ${PROJECT_NAME}
+)
 
 add_executable(transformer src/transform.cpp)
 target_link_libraries(transformer
@@ -173,7 +181,4 @@ target_link_libraries(test_v3
   ${PROJECT_NAME}
 )
 
-add_executable(node_edge_v3 Examples/SLAM/node_edge_v3.cpp)
-target_link_libraries(node_edge_v3
-  ${PROJECT_NAME}
-)
+
