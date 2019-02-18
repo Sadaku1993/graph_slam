@@ -87,7 +87,6 @@ void LoopCloser<T_p>::main()
     }
   }
 
-
   for(auto itr=loop_data.begin(); itr!=loop_data.end(); itr++)
   {
     std::cout<<itr->source_id<<" "<<itr->target_id<<std::endl;
