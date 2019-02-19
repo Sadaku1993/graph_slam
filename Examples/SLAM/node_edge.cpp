@@ -251,7 +251,7 @@ void NodeEdge<T_p>::main()
         << std::endl;
 
     // EDGE_SE3:QUAT
-    ofs << "EDGE_SE3:QUAT" <<" "<< (itr+1)->id <<" "<< itr->id <<" "
+    ofs << "EDGE_SE3:QUAT" <<" "<< itr->id <<" "<< (itr+1)->id <<" "
       <<transform.getOrigin().x()<<" "
       <<transform.getOrigin().y()<<" "
       <<transform.getOrigin().z()<<" "
