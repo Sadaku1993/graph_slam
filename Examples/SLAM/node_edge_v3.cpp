@@ -193,7 +193,7 @@ void NodeEdge<T_p>::main()
     
     Eigen::Matrix4d gicp_matrix;
     Eigen::Affine3d gicp_affine;
-    Gicp.gicp(source_cloud, trans_cloud, gicp_matrix);
+    Gicp.gicp(source_cloud, trans_cloud, gicp_matrix, 0.5);
     gicp_affine = gicp_matrix;
     tf::Transform gicp_transform;
     tf::transformEigenToTF(gicp_affine, gicp_transform);

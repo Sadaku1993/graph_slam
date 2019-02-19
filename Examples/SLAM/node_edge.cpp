@@ -167,6 +167,18 @@ void NodeEdge<T_p>::main()
   std::ofstream ofs(tf_name, std::ios::trunc);
   ofs << "VERTEX_SE3:QUAT" <<" "<< 0 <<" "
       << 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 0.0 <<" "<< 1.0 << std::endl;
+
+
+  ofs << "EDGE_SE3:QUAT" <<" "<< 0 <<" "<< 0 <<" "
+      <<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<1.0<<" "
+	  <<1.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "
+      <<1.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "
+      <<1.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "
+      <<1.0<<" "<<0.0<<" "<<0.0<<" "
+      <<1.0<<" "<<0.0<<" "
+      <<1.0
+      <<std::endl;
+
   ofs.close();
 
   for(auto itr=transforms.begin(); itr!=transforms.end()-1; itr++)
@@ -190,7 +202,7 @@ void NodeEdge<T_p>::main()
     
     Eigen::Matrix4d gicp_matrix;
     Eigen::Affine3d gicp_affine;
-    Gicp.gicp(source_cloud, trans_cloud, gicp_matrix);
+    Gicp.gicp(source_cloud, trans_cloud, gicp_matrix, 0.5);
     gicp_affine = gicp_matrix;
     tf::Transform gicp_transform;
     tf::transformEigenToTF(gicp_affine, gicp_transform);
@@ -226,6 +238,7 @@ void NodeEdge<T_p>::main()
     pcl_ros::transformPointCloud(*target_cloud, *odom_cloud, target_transform);
     pubCloud(odom_cloud, pub_cloud_odom);
 
+    // VERTEX_SE3:QUAT
     std::ofstream ofs(tf_name, std::ios::app);
     ofs << "VERTEX_SE3:QUAT" <<" "<< (itr+1)->id << " "
         << absolute_transform.getOrigin().x()<<" "
@@ -236,6 +249,23 @@ void NodeEdge<T_p>::main()
         << absolute_transform.getRotation().z()<<" "
         << absolute_transform.getRotation().w()
         << std::endl;
+
+    // EDGE_SE3:QUAT
+    ofs << "EDGE_SE3:QUAT" <<" "<< (itr+1)->id <<" "<< itr->id <<" "
+        <<transform.getOrigin().x()<<" "
+        <<transform.getOrigin().y()<<" "
+        <<transform.getOrigin().z()<<" "
+        <<transform.getRotation().x()<<" "
+        <<transform.getRotation().y()<<" "
+        <<transform.getRotation().z()<<" "
+        <<transform.getRotation().w()<<" "
+        <<1.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "
+        <<1.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "
+        <<1.0<<" "<<0.0<<" "<<0.0<<" "<<0.0<<" "
+        <<1.0<<" "<<0.0<<" "<<0.0<<" "
+        <<1.0<<" "<<0.0<<" "
+        <<1.0
+        <<std::endl;
     ofs.close();
 
     /*
