@@ -251,6 +251,16 @@ void NodeEdge<T_p>::main()
         << std::endl;
 
     // EDGE_SE3:QUAT
+    ofs << "EDGE_SE3:QUAT" <<" "<< (itr+1)->id <<" "<< itr->id <<" "
+      <<transform.getOrigin().x()<<" "
+      <<transform.getOrigin().y()<<" "
+      <<transform.getOrigin().z()<<" "
+      <<transform.getRotation().x()<<" "
+      <<transform.getRotation().y()<<" "
+      <<transform.getRotation().z()<<" "
+      <<transform.getRotation().w()
+      <<std::endl;
+
     // ofs << "EDGE_SE3:QUAT" <<" "<< (itr+1)->id <<" "<< itr->id <<" "
     //     <<transform.getOrigin().x()<<" "
     //     <<transform.getOrigin().y()<<" "
