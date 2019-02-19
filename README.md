@@ -57,3 +57,18 @@ pointcloud is saved at
 ```bash
 $roslaunch graph_slam node_edge.launch
 ```
+
+node edge data is saved at 
+
+```bash
+/graph_slam
+  /data
+    /csv
+      gicp.csv
+```
+
+## Loop Closing
+
+```bash
+$roslaunch graph_slam loop_closing.launch
+```
