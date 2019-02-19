@@ -34,6 +34,7 @@ class G2O{
 
     public:
         void main();
+        void g2o(std::string, std::string);
 };
 
 } // namespace GRAPH_SLAM

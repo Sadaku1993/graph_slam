@@ -30,7 +30,7 @@ std::vector<LoopNode> LoopCloser::main(int THRESHPLD, double DISTANCE, std::stri
             double distance = sqrt( pow(edge_transform.getOrigin().x(), 2) + 
                     pow(edge_transform.getOrigin().y(), 2) +  
                     pow(edge_transform.getOrigin().z(), 2) );
-            if(abs(i-j) < THRESHPLD || flag[j]) distance = INFINITY;
+            if(abs(int(i-j)) < THRESHPLD || flag[j]) distance = INFINITY;
             list.push_back(distance);
         }
         std::vector<double>::iterator minIt = std::min_element(list.begin(), list.end());
