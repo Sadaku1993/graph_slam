@@ -99,6 +99,7 @@ add_library(${PROJECT_NAME} SHARED
     src/PCL.cpp
     src/ICP.cpp
     src/LoopCloser.cpp
+    src/GraphSlam.cpp
 )
 target_link_libraries(${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o_core.so
@@ -132,54 +133,58 @@ target_link_libraries(integrator
     ${PROJECT_NAME}
 )
 
-
 add_executable(node_edge Examples/SLAM/node_edge.cpp)
 target_link_libraries(node_edge
     ${PROJECT_NAME}
 )
 
-add_executable(node_edge_v3 Examples/SLAM/node_edge_v3.cpp)
-target_link_libraries(node_edge_v3
-  ${PROJECT_NAME}
-)
-
-add_executable(loop_closer Examples/SLAM/loop_closer.cpp)
-target_link_libraries(loop_closer
-  ${PROJECT_NAME}
-)
-
-add_executable(transformer src/transform.cpp)
-target_link_libraries(transformer
-    ${catkin_LIBRARIES}
-    ${PCL_LIBRARIES}
-)
-
 add_executable(slam3d Examples/SLAM/slam3d.cpp)
 target_link_libraries(slam3d
-    ${catkin_LIBRARIES}
     ${PROJECT_NAME}
 )
 
-add_executable(gicp_test Examples/Test/gicp_test.cpp)
-target_link_libraries(gicp_test
-    ${PCL_LIBRARIES}
-)
-
-add_executable(node_test Examples/Test/node_test.cpp)
-target_link_libraries(node_test
-    ${PCL_LIBRARIES}
-    ${PROJECT_NAME}
-)
-
-add_executable(test_v2 Examples/Test/test_v2.cpp)
-target_link_libraries(test_v2
-  ${catkin_LIBRARIES}
-  ${PCL_LIBRARIES}
-)
-
-add_executable(test_v3 Examples/Test/test_v3.cpp)
-target_link_libraries(test_v3
-  ${PROJECT_NAME}
-)
+# add_executable(loop_closer Examples/SLAM/loop_closer.cpp)
+# target_link_libraries(loop_closer
+#   ${PROJECT_NAME}
+# )
+# 
+# add_executable(node_edge_v3 Examples/SLAM/node_edge_v3.cpp)
+# target_link_libraries(node_edge_v3
+#   ${PROJECT_NAME}
+# )
+# 
+# add_executable(transformer src/transform.cpp)
+# target_link_libraries(transformer
+#     ${catkin_LIBRARIES}
+#     ${PCL_LIBRARIES}
+# )
+# 
+# add_executable(slam3d Examples/SLAM/slam3d.cpp)
+# target_link_libraries(slam3d
+#     ${catkin_LIBRARIES}
+#     ${PROJECT_NAME}
+# )
+# 
+# add_executable(gicp_test Examples/Test/gicp_test.cpp)
+# target_link_libraries(gicp_test
+#     ${PCL_LIBRARIES}
+# )
+# 
+# add_executable(node_test Examples/Test/node_test.cpp)
+# target_link_libraries(node_test
+#     ${PCL_LIBRARIES}
+#     ${PROJECT_NAME}
+# )
+# 
+# add_executable(test_v2 Examples/Test/test_v2.cpp)
+# target_link_libraries(test_v2
+#   ${catkin_LIBRARIES}
+#   ${PCL_LIBRARIES}
+# )
+# 
+# add_executable(test_v3 Examples/Test/test_v3.cpp)
+# target_link_libraries(test_v3
+#   ${PROJECT_NAME}
+# )
 
 

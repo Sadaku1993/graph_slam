@@ -52,4 +52,9 @@ std::vector<LoopNode> LoopCloser::main(int THRESHPLD, double DISTANCE, std::stri
     return LoopNodes;
 }
 
+void LoopCloser::loop_closer(int THRESHPLD, double DISTANCE, std::vector<ID> transforms)
+{
+    bool loop[transforms.size()] = {false};
+}
+
 }

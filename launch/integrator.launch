@@ -2,7 +2,7 @@
 <launch>
     <!--map integrator-->
     <node pkg="graph_slam" type="integrator" name="integrator" output="screen">
-        <param name="tf_name" type="string" value="/data/csv/gicp.csv" />
-        <param name="map_name" type="string" value="/data/map/gicp.pcd" />
+        <param name="tf_name" type="string" value="/data/csv/2.csv" />
+        <param name="map_name" type="string" value="/data/map/2.pcd" />
     </node>
 </launch>

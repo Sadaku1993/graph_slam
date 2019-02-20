@@ -22,6 +22,7 @@ class LoopCloser{
     public:
         LoopCloser();
         std::vector<LoopNode> main(int, double, std::string);
+        void loop_closer(int, double, std::vector<ID>);
 };
 
 }
