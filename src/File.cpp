@@ -114,5 +114,51 @@ bool File::loadTF(std::vector< ID >& transforms,
     }
 }
 
+void File::search_dir(std::string path,
+                      std::vector<std::string> &fileNames)
+{
+  int i, dirElements;
+  std::string search_path;
+
+  struct stat stat_buf;
+  struct dirent **namelist=NULL;
+
+  dirElements = scandir(path.c_str(), &namelist, NULL, NULL);
+
+  if(dirElements == -1)
+      std::cout << "ERROR" <<  std::endl;
+
+  else{
+
+    for (i=0; i<dirElements; i+=1) {
+
+      if( (strcmp(namelist[i]->d_name , ".\0") != 0) && (strcmp(namelist[i]->d_name , "..\0") != 0) ){
+
+        search_path = path + std::string(namelist[i] -> d_name);
+
+        if(stat(search_path.c_str(), &stat_buf) == 0){
+
+          if ((stat_buf.st_mode & S_IFMT) == S_IFDIR){
+            search_dir(path + std::string(namelist[i] -> d_name) + "/", fileNames);
+          }
+
+          else {
+            fileNames.push_back(std::string(namelist[i] -> d_name)); //relative
+            //fileNames.push_back(search_path); //absolute
+          }
+        }
+
+        else{
+            std::cout << "ERROR" <<  std::endl << std::endl;
+        }
+      }
+    }
+  }
+
+  free(namelist);
+  return;
+
+}
+
 
 }

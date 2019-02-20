@@ -5,6 +5,10 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 
+#include <bits/stdc++.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
 #include <iostream>
 #include <fstream>
 #include <tf/tf.h>
@@ -33,6 +37,9 @@ class File{
         bool loadTF(std::vector< tf::Transform >&, std::string);
         bool loadTF(std::vector< ID >&, std::string);
 
+        void search_dir(std::string, std::vector<std::string>&);
+
+     
     private:
 };
 

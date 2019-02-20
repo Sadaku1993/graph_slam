@@ -91,8 +91,21 @@ update node edge data is saved at
 
 ## View Created 3D Map
 
-prease change the node edge csv file name
+prease serect csv file name and detect pcd file name
 
-```
-roslaunch graph_slam integrator.launch
+```bash
+$roslaunch graph_slam integrator.launch
+
+  CSV file list
+    odometry.csv
+    gicp.csv
+    0.csv
+    1.csv
+    :
+    :
+  
+  Please select csv file: 2.csv
+  Please enter map file: 2.pcd
+    :
+    :
 ```
