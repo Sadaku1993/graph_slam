@@ -2,6 +2,8 @@
 
 # How to Use
 
+## Download Bag Data
+[This bagdata](https://drive.google.com/open?id=1VEy_iJZKEGcNDDKsK-YrqgKxwy6qsric) is recorded at Meiji University (Autonomous Mobile Systems Lab).
 
 ## Data Save
 
