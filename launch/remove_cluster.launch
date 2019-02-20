@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <!--remove cluster-->
 <launch>
-    <node pkg="mapping" type="rm_cluster" name="rm_cluster" output="screen">
-    </node>
+    <node pkg="graph_slam" type="rm_cluster" name="rm_cluster" output="screen"/>
 </launch>

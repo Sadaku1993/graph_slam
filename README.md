@@ -39,7 +39,7 @@ in the pointcloud data, obstacles (like human and so on) are included.
 in order to removed them, use clustering(PCL)
 
 ```bash
-$ rosrun graph_slam rm_cluster
+$ roslaunch graph_slam remove_cluster.launch
 ```
 
 pointcloud is saved at
@@ -72,5 +72,27 @@ node edge data is saved at
 ## Loop Closing
 
 ```bash
-$rosrun graph_slam slam3d
+$roslaunch graph_slam slam3d.launch
+```
+
+update node edge data is saved at
+
+```bash
+/graph_slam
+  /data
+    /csv
+      /0.csv
+      /1.csv
+       :
+       :
+       :
+```
+
+
+## View Created 3D Map
+
+prease change the node edge csv file name
+
+```
+roslaunch graph_slam integrator.launch
 ```
