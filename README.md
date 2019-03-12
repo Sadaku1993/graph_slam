@@ -1,12 +1,90 @@
 # Graph SLAM
 
-# How to Use
+# Environment
+- Ubuntu16.04
+- ROS(Kinetic)
+- g2o
+- PCL(1.8)
+
+# Setup
+
+## Graph SLAM
+Download Graph SLAM package
+
+```bash
+(catkin workspace)
+$ git clone https://github.com/Sadaku1993/graph_slam
+```
+
+## g2o
+Download g2o package
+
+### Requirements
+* cmake
+* Eigen3
+* suitesparse
+* Qt5
+* libQGLViewer
+
+On Ubuntu these dependencies are resolved by installing the following packages.
+
+- cmake
+- Eigen3
+- libsuitesparse-dev
+- qtdeclarative5-dev
+- qt5-qmake
+- libqglviewer-dev
+
+### Install
+
+```bash
+( graph_slam package )
+$ ./setup.bash
+$ cd Thirdparty
+$ git clone https://github.com/Sadaku1993/g2o
+$ cd g2o
+$ mkdir build
+$ cmake .. -DBUILD_CSPARSE=ON
+$ make
+$ sudo make install
+```
+
+## Velodyne
+Download Velodyne package
+
+```bash
+( catkin workspace )
+$ git clone https://github.com/ros-drivers/velodyne
+```
+
+## Normal Estimation
+Download Normal Estimation Package
+
+```bash
+( catkin workspace )
+$ git clone https://github.com/amslabtech/perfect_velodyne
+```
 
 ## Download Bag Data
 [This bagdata](https://drive.google.com/open?id=1VEy_iJZKEGcNDDKsK-YrqgKxwy6qsric) is recorded at Meiji University (Autonomous Mobile Systems Lab).
 
-## Data Save
+Move this bagdata to bagfiles dirs.
 
+```bash
+graph_slam/
+  data/
+    bagfiles/
+      Infant-Dkan.bag
+```
+
+# How to Use
+
+1. Save Data
+2. Remove Obstacle
+3. GICP
+4. Graph Optimization and Loop Closing
+
+## Save Data
 save odometry and pointcloud data.
 
 ```bach
@@ -33,7 +111,7 @@ pointcloud is saved at
 ```
 
 
-## Remove Obstacle (Using Clustering)
+## Remove Obstacle (By Clustering)
 
 in the pointcloud data, obstacles (like human and so on) are included.
 in order to removed them, use clustering(PCL)

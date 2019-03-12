@@ -15,70 +15,6 @@ SLAM3D::SLAM3D()
     count = 0;
 }
 
-struct LoopID{
-  int a;
-  int b;
-};
-
-void SLAM3D::loop_detector(size_t size)
-{
-  std::vector<LoopID> list;
-
-  for(size_t i=0;i<size;i++){
-    // load CSV File
-    std::string bfr_csv = tf_path + std::to_string(count) + ".csv";
-    std::string aft_csv = tf_path + std::to_string(count+1) + ".csv";
-    std::vector< ID > transforms;
-    File.loadTF(transforms, bfr_csv);
-
-    for(size_t j=0;j<size;j++){
-      tf::Transform source_transform = transforms[i].transform;
-      tf::Transform target_transform = transforms[j].transform;
-      tf::Transform edge_transform = source_transform.inverseTimes(target_transform);
-
-      double distance = sqrt( pow(edge_transform.getOrigin().x(), 2) + 
-          pow(edge_transform.getOrigin().y(), 2) +  
-          pow(edge_transform.getOrigin().z(), 2) );
-
-      // loop detector
-      if(abs(int(i-j)) < THRESHOLD || DISTANCE < distance) continue;
-
-      // check whether these nodes are already detected as loop node
-      bool flag = false;
-      for(auto itr=list.begin(); itr!=list.end(); itr++){
-        if( (itr->a == int(i) && itr->b == int(j)) || 
-            (itr->a == int(j) && itr->b == int(i)) )
-          flag = true;
-      }
-      if(flag) continue;
-      
-      // if detect new loop nodes, run gicp and update graph by g2o
-      LoopNode ln;
-      ln.source_id = i;
-      ln.target_id = j;
-      ln.source_transform = transforms[i].transform;
-      ln.target_transform = transforms[j].transform;
-
-      // GICP
-      gicp<pcl::PointXYZINormal> (ln, bfr_csv);
-
-      // G2O
-      g2o(bfr_csv, aft_csv);
-
-      // ADD List
-      LoopID id;
-      id.a = i;
-      id.b = j;
-      list.push_back(id);
-
-      std::cout<<"Loop Detector : "<<i<<"  "<<j<<std::endl;
-
-      count++;
-    }
-  }
-}
-
-/*
 void SLAM3D::loop_detector(size_t size)
 {
     bool loop[size] = {false};
@@ -127,7 +63,6 @@ void SLAM3D::loop_detector(size_t size)
         count++;
     }
 }
-*/
 
 void SLAM3D::g2o(std::string bfr_csv, std::string aft_csv)
 {
