@@ -71,7 +71,7 @@ void SLAM3D::loop_detector(size_t size)
       id.b = j;
       list.push_back(id);
 
-      std::cout<<"Loop Detector : "<<i<<"  "<<j<<std::endl;
+      // std::cout<<"Loop Detector : "<<i<<"  "<<j<<std::endl;
 
       count++;
     }
