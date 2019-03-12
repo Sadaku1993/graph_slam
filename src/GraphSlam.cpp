@@ -77,7 +77,7 @@ void SLAM3D::loop_detector(size_t size)
     }
   }
 
-  for(auto itr=list.begin(); itr!=lise.end(); itr++)
+  for(auto itr=list.begin(); itr!=list.end(); itr++)
     std::cout<<"List : "<<itr->a<<" "<<itr->b<<std::endl;
 }
 
