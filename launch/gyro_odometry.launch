@@ -1,23 +1,31 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="wheel" default="/tinypower/odom" />
-	<arg name="gyro" default="/imu/data" />
-	<arg name="topic" default="/odom/complement" />
+    <arg name="gyro" default="/imu/data" />
+    <arg name="topic" default="/odom/complement" />
     <arg name="drift" default="-0.00159716" />
     <arg name="global_frame" default="/map" />
     <arg name="child_frame" default="/base_link"/>
 
-	<node pkg="complement" type="complement_pubtf" name="complement_pubtf">
-		<param name="topic_name/wheel" value="$(arg wheel)" />
-		<param name="topic_name/gyro" value="$(arg gyro)" />
-		<param name="topic_name/odom_complement" value="$(arg topic)" />
-        <param name="dyaw/drift" value="$(arg drift)" />
-        <param name="complement/global_frame" value="$(arg global_frame)" />
-        <param name="complement/child_frame"  value="$(arg child_frame)" />
-	</node>
+    <!--node pkg="complement" type="complement_pubtf" name="complement_pubtf">
+      <param name="topic_name/wheel" value="$(arg wheel)" />
+      <param name="topic_name/gyro" value="$(arg gyro)" />
+      <param name="topic_name/odom_complement" value="$(arg topic)" />
+      <param name="dyaw/drift" value="$(arg drift)" />
+      <param name="complement/global_frame" value="$(arg global_frame)" />
+      <param name="complement/child_frame"  value="$(arg child_frame)" />
+    </node-->
 
+    <node pkg="graph_slam" type="gyro_odometry" name="gyro_odometry">
+      <param name="topic_name/wheel" value="$(arg wheel)" />
+      <param name="topic_name/gyro" value="$(arg gyro)" />
+      <param name="topic_name/odom_complement" value="$(arg topic)" />
+      <param name="dyaw/drift" value="$(arg drift)" />
+      <param name="complement/global_frame" value="$(arg global_frame)" />
+      <param name="complement/child_frame"  value="$(arg child_frame)" />
+    </node>
 
-	<node pkg="tf" type="static_transform_publisher" name="base2lidar"
-		  args="0 0 1.300 0 0 0 /base_link /velodyne 100" />
+    <node pkg="tf" type="static_transform_publisher" name="base2lidar"
+      args="0 0 1.300 0 0 0 /base_link /velodyne 100" />
 
 </launch>

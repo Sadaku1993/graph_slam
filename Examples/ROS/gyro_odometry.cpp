@@ -3,7 +3,6 @@
  *
  * calcrate gyro odometry 
  *
- *
  * author : Yudai Sadakuni
  *
  */
