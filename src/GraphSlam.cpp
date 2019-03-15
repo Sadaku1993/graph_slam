@@ -51,6 +51,8 @@ void SLAM3D::loop_detector(size_t size)
           flag = true;
       }
       if(flag) continue;
+
+      std::cout<<"Loop Detector : "<<i<<"  "<<j<<std::endl;
       
       // if detect new loop nodes, run gicp and update graph by g2o
       LoopNode ln;
@@ -71,9 +73,9 @@ void SLAM3D::loop_detector(size_t size)
       id.b = j;
       list.push_back(id);
 
-      std::cout<<"Loop Detector : "<<i<<"  "<<j<<std::endl;
-
       count++;
+
+      break;
     }
   }
 
