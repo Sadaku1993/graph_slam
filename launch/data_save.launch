@@ -22,7 +22,7 @@
     
     <!--rosbag-->
     <param name="use_sim_time" type="bool" value="true" />
-    <arg name="bag" default="$(find graph_slam)/data/bagdata/infant_outdoor.bag --clock" />
+    <arg name="bag" default="$(find graph_slam)/data/bagdata/ikuta_all.bag --clock" />
     <node pkg="rosbag" type="play" name="play" args="$(arg bag)"/>
     
     <!--rviz-->
