@@ -24,6 +24,8 @@ void SLAM3D::loop_detector(size_t size)
 {
   std::vector<LoopID> list;
 
+  std::cout<<"Silz : "<<size<<std::endl;
+
   for(size_t i=0;i<size;i++){
     // load CSV File
     std::string bfr_csv = tf_path + std::to_string(count) + ".csv";
