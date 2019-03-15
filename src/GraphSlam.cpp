@@ -28,12 +28,17 @@ void SLAM3D::loop_detector(size_t size)
 
   for(size_t i=0;i<size;i++){
     // load CSV File
-    std::string bfr_csv = tf_path + std::to_string(count) + ".csv";
-    std::string aft_csv = tf_path + std::to_string(count+1) + ".csv";
-    std::vector< ID > transforms;
-    File.loadTF(transforms, bfr_csv);
+    // std::string bfr_csv = tf_path + std::to_string(count) + ".csv";
+    // std::string aft_csv = tf_path + std::to_string(count+1) + ".csv";
+    // std::vector< ID > transforms;
+    // File.loadTF(transforms, bfr_csv);
 
     for(size_t j=0;j<size;j++){
+      std::string bfr_csv = tf_path + std::to_string(count) + ".csv";
+      std::string aft_csv = tf_path + std::to_string(count+1) + ".csv";
+      std::vector< ID > transforms;
+      File.loadTF(transforms, bfr_csv);
+
       tf::Transform source_transform = transforms[i].transform;
       tf::Transform target_transform = transforms[j].transform;
       tf::Transform edge_transform = source_transform.inverseTimes(target_transform);
