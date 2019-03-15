@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <!--remove cluster-->
 <launch>
-    <node pkg="graph_slam" type="slam3d" name="slam3d" output="screen"/>
+  <node pkg="graph_slam" type="slam3d" name="slam3d" output="screen">
+    <param name="DISTANCE" type="double" value="1.0" />
+  </node>
 </launch>
