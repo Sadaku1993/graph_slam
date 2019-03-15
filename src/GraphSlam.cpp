@@ -77,9 +77,8 @@ void SLAM3D::loop_detector(size_t size)
 
       count++;
 
-      std::string bfr_csv = tf_path + std::to_string(count) + ".csv";
-      std::string aft_csv = tf_path + std::to_string(count+1) + ".csv";
-      std::vector< ID > transforms;
+      bfr_csv = tf_path + std::to_string(count) + ".csv";
+      aft_csv = tf_path + std::to_string(count+1) + ".csv";
       File.loadTF(transforms, bfr_csv);
 
       std::cout<<"\n";
