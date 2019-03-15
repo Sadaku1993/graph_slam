@@ -18,6 +18,8 @@ class Integrator{
         std::string tf_name;
         std::string map_name;
 
+        int skip;
+
     public:
         Integrator();
         GRAPH_SLAM::File File;
@@ -35,6 +37,7 @@ Integrator<T_p>::Integrator()
     nh.param<std::string>("cloud_path", cloud_path, "/data/remove/");
     nh.param<std::string>("tf_path", tf_path, "/data/csv/");
     nh.param<std::string>("map_path", map_path, "/data/map/");
+    nh.param<int>("skip", skip, 1);
 
     cloud_path.insert(0, package_path);
     tf_path.insert(0, package_path);
@@ -73,6 +76,8 @@ void Integrator<T_p>::main()
 
     for (auto itr=transforms.begin(); itr!=transforms.end(); itr++)
     {
+        if(itr->id % skip != 0) continue;
+
         std::cout<<"ID:"<<itr->id<<" "<<std::endl;
         Util.printTF(itr->transform);
 
