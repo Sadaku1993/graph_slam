@@ -28,7 +28,7 @@ void G2O::g2o(std::string bfr_file_name,
 
   std::cerr << "Optimizing" << std::endl;
   optimizer.initializeOptimization();
-  optimizer.optimize(10);
+  optimizer.optimize(100);
   std::cerr << "done." << std::endl;
 
   optimizer.save(aft_file_name.c_str());
