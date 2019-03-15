@@ -69,6 +69,11 @@ void Integrator<T_p>::main()
     std::getline(std::cin, name_map);
     map_name = map_path + name_map;
 
+    std::cout<<"Please set skip size: ";
+    std::string skip_str;
+    std::getline(std::cin, skip_str);
+    skip = std::stoi(skip_str);
+
     File.loadTF(transforms, tf_name);
     std::cout<<transforms.size()<<std::endl;
 
