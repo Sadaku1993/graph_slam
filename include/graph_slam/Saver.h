@@ -70,6 +70,11 @@ Saver<T_p>::Saver()
     first_flag = true;
 
     tf_path = package_path + "/data/csv/odometry.csv";
+
+    // remove csv file
+    if (remove(tf_path.c_str()) == 0)
+      std::cout<<"remove "<<tf_path<<std::endl;
+    
 }
 
 template<typename T_p>
