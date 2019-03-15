@@ -18,8 +18,6 @@ class Integrator{
         std::string tf_name;
         std::string map_name;
 
-        int skip;
-
     public:
         Integrator();
         GRAPH_SLAM::File File;
@@ -37,7 +35,6 @@ Integrator<T_p>::Integrator()
     nh.param<std::string>("cloud_path", cloud_path, "/data/remove/");
     nh.param<std::string>("tf_path", tf_path, "/data/csv/");
     nh.param<std::string>("map_path", map_path, "/data/map/");
-    nh.param<int>("skip", skip, 5);
 
     cloud_path.insert(0, package_path);
     tf_path.insert(0, package_path);
@@ -78,8 +75,6 @@ void Integrator<T_p>::main()
     {
         std::cout<<"ID:"<<itr->id<<" "<<std::endl;
         Util.printTF(itr->transform);
-
-        if(itr->id % skip != 0) continue;
 
         std::string cloud_name = cloud_path + std::to_string(itr->id) + ".pcd";
         typename pcl::PointCloud<T_p>::Ptr cloud(new pcl::PointCloud<T_p>);
