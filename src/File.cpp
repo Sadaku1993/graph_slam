@@ -56,7 +56,7 @@ bool File::loadTF(std::vector<tf::Transform>& transforms,
     std::ifstream ifs(file_path);
 
     if(ifs.fail()){
-        std::cout<<"File is None"<<std::endl;
+        std::cout<<"File("<<file_path<<") is None"<<std::endl;
         exit(0);
     }
 
@@ -86,7 +86,7 @@ bool File::loadTF(std::vector< ID >& transforms,
     std::ifstream ifs(file_path);
 
     if(ifs.fail()){
-        std::cout<<" File is None "<<std::endl;
+        std::cout<<"File("<<file_path<<") is None"<<std::endl;
         exit(0);
     }
 
