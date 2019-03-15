@@ -74,8 +74,6 @@ void SLAM3D::loop_detector(size_t size)
       list.push_back(id);
 
       count++;
-
-      break;
     }
   }
 
